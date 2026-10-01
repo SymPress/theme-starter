@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Use WordPress's native `theme.json` preset variables in frontend and editor
+  styles. Replace the token generator with a Tailwind CSS alias map.
+- Use `sympress/qa` 0.1.1 for PHP syntax checking instead of a theme-local script.
+- Move asset and HTTP checks into `tests/`; expose HTTP checks as `npm run test:http`.
+
 ## 0.1.1 — 2026-10-01
 
 - Require stable Assets `^1.1` and use its public Encore `loadFromArray()` API.

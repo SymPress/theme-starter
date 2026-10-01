@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e535afea7aa2c79367e08833edc45133",
+    "content-hash": "7b622f829b09cb1df51c8b8e889d1515",
     "packages": [
         {
             "name": "composer/installers",
@@ -6662,16 +6662,16 @@
         },
         {
             "name": "sympress/qa",
-            "version": "0.1.0",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SymPress/qa.git",
-                "reference": "6e5568b2aff272b80846a10a4fb97074cb97a9aa"
+                "reference": "49ad8fc76d2ac9de71e75d7c8e38602e3d733650"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SymPress/qa/zipball/6e5568b2aff272b80846a10a4fb97074cb97a9aa",
-                "reference": "6e5568b2aff272b80846a10a4fb97074cb97a9aa",
+                "url": "https://api.github.com/repos/SymPress/qa/zipball/49ad8fc76d2ac9de71e75d7c8e38602e3d733650",
+                "reference": "49ad8fc76d2ac9de71e75d7c8e38602e3d733650",
                 "shasum": ""
             },
             "require": {
@@ -6710,9 +6710,9 @@
             "description": "Shared QA tooling for SymPress packages.",
             "support": {
                 "issues": "https://github.com/SymPress/qa/issues",
-                "source": "https://github.com/SymPress/qa/tree/0.1.0"
+                "source": "https://github.com/SymPress/qa/tree/0.1.1"
             },
-            "time": "2026-09-30T17:11:51+00:00"
+            "time": "2026-10-01T16:55:39+00:00"
         },
         {
             "name": "szepeviktor/phpstan-wordpress",

@@ -72,7 +72,6 @@ scripts and source inputs in `extra.sympress.asset-compiler`.
 npm run dev       # development build with source maps
 npm run watch     # rebuild on changes
 npm run build     # minified, content-hashed production assets
-npm run tokens    # regenerate both token stylesheets from theme.json
 ```
 
 Tailwind scans Twig templates, block patterns and JavaScript. Use complete utility
@@ -96,8 +95,11 @@ warning is intentional; asset URLs are resolved against the active theme.
 | Template selection | `src/View/TemplateResolver.php` |
 | Example block pattern | `patterns/editorial-intro.php` |
 
-Edit design tokens in `theme.json`. The build generates `resources/css/tokens.css`
-and `resources/css/tailwind-tokens.css`; do not edit those files directly.
+Edit colors and fonts in `theme.json`. WordPress provides the corresponding
+`--wp--preset--*` CSS variables in the frontend and editor; no token generator is
+needed. `resources/css/tailwind-theme.css` maps those variables to Tailwind utility
+names without duplicating their values. When adding a new preset, add an alias
+there if you also want a named utility such as `bg-brand`.
 
 Twig uses the `@StarterTheme` namespace and WordPress's native template hierarchy.
 Add templates for categories, taxonomies, authors, dates, post types, attachments

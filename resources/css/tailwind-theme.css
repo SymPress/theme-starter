@@ -1,0 +1,12 @@
+/* WordPress owns the preset values; Tailwind only maps utility names. */
+@theme inline {
+  --color-brand: var(--wp--preset--color--brand);
+  --color-ink: var(--wp--preset--color--ink);
+  --color-paper: var(--wp--preset--color--paper);
+  --color-muted: var(--wp--preset--color--muted);
+  --color-line: var(--wp--preset--color--line);
+  --color-brand-deep: var(--wp--preset--color--brand-deep);
+  --color-white: var(--wp--preset--color--white);
+  --font-sans: var(--wp--preset--font-family--body);
+  --font-serif: var(--wp--preset--font-family--display);
+}

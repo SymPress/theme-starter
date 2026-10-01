@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.0 — 2026-10-01
+
+- Freeze the public theme API introduced in 0.2: documented hooks, menu locations,
+  textdomain, child-template conventions and layout blocks follow SemVer.
+- Publish the deprecation/security policy and official asset-compiler deployment
+  path, including production container and Twig cache warmup.
+- Retain the verified 0.2.1 runtime and stable Twig Bundle 1.1.0 / Assets 1.2.0 lock.
+  WordPress frontend/admin/AJAX, production builds and browser tests gate releases.
+
 ## 0.2.1 — 2026-10-01
 
 - Move generic rendering to Twig Bundle 1.1 and asset helpers to Assets 1.2.

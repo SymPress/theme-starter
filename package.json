@@ -15,8 +15,7 @@
     "build": "encore production",
     "build:production": "npm run build",
     "test:browser": "playwright test",
-    "test:chunks": "NODE_ENV=production node scripts/check-chunks.mjs",
-    "preview": "node scripts/preview-server.cjs"
+    "test:chunks": "NODE_ENV=production node scripts/check-chunks.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

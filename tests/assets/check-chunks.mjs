@@ -3,11 +3,11 @@ import { chromium } from '@playwright/test';
 import { createServer } from 'node:http';
 import { readFile, readdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import configPromise from '../webpack.config.js';
+import configPromise from '../../webpack.config.js';
 
 const config = await configPromise;
-const directory = fileURLToPath(new URL('../var/chunk-check/', import.meta.url));
-config.entry = { probe: fileURLToPath(new URL('../tests/Fixtures/chunks/entry.js', import.meta.url)) };
+const directory = fileURLToPath(new URL('../../var/chunk-check/', import.meta.url));
+config.entry = { probe: fileURLToPath(new URL('../Fixtures/chunks/entry.js', import.meta.url)) };
 config.output.path = directory;
 // Encore's manifest plugins capture the normal build directory at construction.
 // This isolated runtime probe needs only webpack's actual entry/chunk output.

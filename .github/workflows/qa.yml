@@ -62,8 +62,6 @@ jobs:
         run: npx playwright install --only-shell chromium
       - name: Production build
         run: npm run build
-      - name: Check generated design tokens
-        run: git diff --exit-code -- resources/css/tokens.css resources/css/tailwind-tokens.css
       - name: Test lazy chunks on nested routes
         run: npm run test:chunks
       - name: Audit JavaScript dependencies

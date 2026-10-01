@@ -9,13 +9,13 @@
     "node": "^22.18.0 || ^24.11.0 || >=26.0"
   },
   "scripts": {
-    "tokens": "node scripts/design-tokens.mjs",
     "dev": "encore dev",
     "watch": "encore dev --watch",
     "build": "encore production",
     "build:production": "npm run build",
     "test:browser": "playwright test",
-    "test:chunks": "NODE_ENV=production node scripts/check-chunks.mjs"
+    "test:chunks": "NODE_ENV=production node tests/assets/check-chunks.mjs",
+    "test:http": "node tests/site/check-http.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

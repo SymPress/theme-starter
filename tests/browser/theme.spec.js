@@ -30,6 +30,15 @@ for (const width of [320, 768, 1024, 1440]) {
   });
 }
 
+test('theme styles follow WordPress preset overrides without rebuilding assets', async ({ page }) => {
+  await page.goto('/');
+  const cover = page.locator('.type-cover');
+  await expect(cover).toHaveCSS('background-color', 'rgb(56, 88, 233)');
+  await page.addStyleTag({ content: ':root { --wp--preset--color--brand: #135724; --wp--preset--font-family--display: monospace; }' });
+  await expect(cover).toHaveCSS('background-color', 'rgb(19, 87, 36)');
+  await expect(page.locator('.page-intro h1')).toHaveCSS('font-family', 'monospace');
+});
+
 test('public pages have one relevant meta description and protected pages do not leak one', async ({ page }) => {
   const descriptions = [];
   for (const route of ['/', '/gedanken-3/', '/ueber/']) {
@@ -129,6 +138,11 @@ test('block editor loads scoped theme styles inside its canvas', async ({ page }
   await expect(editor).toBeVisible();
   await expect(editor).toHaveCSS('background-color', 'rgb(246, 247, 247)');
   await expect(editor).toHaveCSS('color', 'rgb(16, 21, 23)');
+  await editor.evaluate(el => {
+    el.style.setProperty('--wp--preset--color--paper', '#e1e2e3');
+  });
+  await expect(editor).toHaveCSS('background-color', 'rgb(225, 226, 227)');
+  await editor.evaluate(el => el.style.removeProperty('--wp--preset--color--paper'));
   expect(await page.locator('link[href*="sympress-starter-app"]').count()).toBe(0);
   await page.evaluate(() => {
     if (wp.data.select('core/edit-post').isFeatureActive('welcomeGuide')) {

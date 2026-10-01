@@ -6,7 +6,7 @@ import { gunzipSync } from 'node:zlib';
 // Exercise the disposable fixture's delivery rules, including decoded integrity.
 const base = process.env.THEME_TEST_URL || 'http://127.0.0.1:18943';
 assert.ok(['127.0.0.1', 'localhost'].includes(new URL(base).hostname));
-const entries = JSON.parse(await readFile(new URL('../build/entrypoints.json', import.meta.url)));
+const entries = JSON.parse(await readFile(new URL('../../build/entrypoints.json', import.meta.url)));
 const app = entries.entrypoints['sympress-starter-app'];
 
 function request(path, encoding = 'gzip', method = 'GET') {
@@ -25,7 +25,7 @@ function request(path, encoding = 'gzip', method = 'GET') {
 for (const asset of [...app.css, ...app.js]) {
   const name = asset.split('/').at(-1);
   const route = '/wp-content/themes/sympress-starter/build/' + name;
-  const source = await readFile(new URL('../build/' + name, import.meta.url));
+  const source = await readFile(new URL('../../build/' + name, import.meta.url));
   const zipped = await request(route);
   assert.equal(zipped.status, 200);
   assert.equal(zipped.headers['content-encoding'], 'gzip');

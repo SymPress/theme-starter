@@ -12,7 +12,7 @@
     "sympress/twig-bundle": "^1.0.2",
     "twig/twig": "^3.22"
   },
-  "require-dev": { "brain/monkey": "^2.6", "nikic/php-parser": "^5.9", "sympress/qa": "^0.1" },
+  "require-dev": { "brain/monkey": "^2.6", "nikic/php-parser": "^5.9", "sympress/qa": "^0.1.1" },
   "autoload": { "psr-4": { "SymPress\\StarterTheme\\": "src/" } },
   "autoload-dev": { "psr-4": { "SymPress\\StarterTheme\\Tests\\": "tests/" } },
   "extra": {
@@ -27,7 +27,7 @@
         "script": { "$mode": { "$default": "build", "production": "build:production" } },
         "dependencies": "install",
         "package-manager": "npm",
-        "src-paths": ["resources", "patterns", "theme.json", "scripts/design-tokens.mjs", "webpack.config.js", "postcss.config.js", "package.json", "package-lock.json"]
+        "src-paths": ["resources", "patterns", "theme.json", "webpack.config.js", "postcss.config.js", "package.json", "package-lock.json"]
       }
     }
   },
@@ -38,7 +38,7 @@
     "static-analysis": "@php vendor/bin/qa static-analysis",
     "i18n": "@php scripts/extract-translations.php",
     "lint:twig": "@php scripts/lint-twig.php",
-    "lint:php": "@php scripts/lint-php.php",
+    "lint:php": "@php vendor/bin/qa lint:php --exclude=tests/site/public",
     "qa": ["@composer validate --strict", "@lint:php", "@lint:twig", "@cs", "@static-analysis", "@test"]
   },
   "config": { "sort-packages": true, "allow-plugins": { "composer/installers": true, "dealerdirect/phpcodesniffer-composer-installer": true, "phpstan/extension-installer": true } },

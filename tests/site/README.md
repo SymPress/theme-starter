@@ -8,6 +8,11 @@ fixture posts. The database credentials and salts here are public test values.
 Executed locally with Podman and the existing PHP 8.5 DDEV image. Commands below
 assume the workspace is mounted as `/workspace` in the PHP container:
 
+For parallel worktrees, set `THEME_TEST_URL` to a separate loopback port and
+`THEME_TEST_TABLE_PREFIX` to a unique prefix for both the PHP server and WP-CLI.
+Pass the same URL to the browser and HTTP tests. Each worktree must have its own
+fixture dependencies and generated files.
+
 ```sh
 # From the SymPress workspace root:
 podman run -d --name sympress-theme-test-db \
@@ -59,7 +64,7 @@ The router compresses frontend HTML and content-hashed theme CSS/JS through PHP'
 zlib extension. Hashed assets receive a one-year immutable cache header; HTML and
 unversioned manifests do not. A real deployment should implement these rules on
 its webserver. Verify the fixture's headers and decoded response integrity with
-`node scripts/check-http.mjs` from the theme root.
+`npm run test:http` from the theme root.
 
 The fixture intentionally has no email delivery or production hardening. WP-CLI's
 bundled dependencies emit PHP 8.5 deprecation notices; record these separately

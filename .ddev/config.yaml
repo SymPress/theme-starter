@@ -1,0 +1,14 @@
+name: sympress-theme
+type: php
+docroot: tests/site/public
+php_version: "8.5"
+webserver_type: nginx-fpm
+nodejs_version: "24"
+database:
+  type: mariadb
+  version: "10.11"
+web_environment:
+  - THEME_TEST_DB_USER=db
+  - THEME_TEST_DB_PASSWORD=db
+  - THEME_TEST_DB_HOST=db
+  - THEME_TEST_URL=http://sympress-theme.ddev.site

@@ -3,9 +3,10 @@
 declare(strict_types=1);
 
 use SymPress\Kernel\App;
-use SymPress\StarterTheme\View\TemplateResolver;
-use SymPress\StarterTheme\WordPress\Context;
-use SymPress\StarterTheme\WordPress\Content;
+use SymPress\TwigBundle\WordPress\TemplateHierarchy;
+use SymPress\TwigBundle\WordPress\QueryContextProvider;
+use SymPress\TwigBundle\WordPress\ThemeRenderer;
+use SymPress\TwigBundle\WordPress\Excerpt;
 use SymPress\StarterTheme\WordPress\Theme;
 use SymPress\TwigBundle\Renderer\TemplateRendererInterface;
 
@@ -53,19 +54,20 @@ try {
     update_post_meta($postId, '_wp_page_template', 'custom/landing.html.twig');
     $GLOBALS['wp_query'] = $GLOBALS['wp_the_query'] = new WP_Query(['page_id' => $postId]);
     $GLOBALS['post'] = get_post($postId);
-    $resolver = new TemplateResolver($templates);
-    $resolver->register();
-    $assert($resolver->candidates() === ['custom/landing', 'page-review-regression-fixture', 'page-' . $postId, 'page', 'singular'], 'Native page hierarchy: ' . json_encode($resolver->candidates()));
-    $assert($resolver->resolve($resolver->candidates()) === '@StarterTheme/custom/landing.html.twig', 'Custom Twig page selected.');
+    $resolver = new TemplateHierarchy();
+    $assert($resolver->forQuery($GLOBALS['wp_query']) === ['custom/landing', 'page-review-regression-fixture', 'page-' . $postId, 'page', 'singular', 'index'], 'Native page hierarchy: ' . json_encode($resolver->forQuery($GLOBALS['wp_query'])));
+    $assert(App::make(ThemeRenderer::class)->resolve($resolver->forQuery($GLOBALS['wp_query'])) === '@theme/custom/landing.html.twig', 'Custom Twig page selected.');
     $assert(isset(wp_get_theme()->get_page_templates()['custom/landing.html.twig']), 'Custom Twig template appears in the editor.');
     ob_start();
     (new Theme())->metaDescription();
     $metadata = ob_get_clean();
     $assert($shortcodes === 0 && $blocks === 0, 'Metadata must not render shortcodes or blocks.');
     $assert(str_contains($metadata, 'Stored description &amp; text.'), 'Plain stored metadata is escaped once.');
-    $context = (new Context())->build('@StarterTheme/custom/landing.html.twig');
+    $context = App::make(QueryContextProvider::class)->context();
+    $assert($shortcodes === 0 && $blocks === 0, 'Context construction is lazy.');
+    $content = $context['post']->content();
     $assert($shortcodes === 1 && $blocks === 1, 'Body renders shortcode and dynamic block exactly once.');
-    $assert(str_contains((string) $context['posts'][0]['content'], 'Dynamic block output'), 'Rendered block reaches Twig.');
+    $assert(str_contains((string) $content, 'Dynamic block output'), 'Rendered block reaches Twig.');
 
     add_filter('excerpt_length', $lengthFilter);
     add_filter('excerpt_more', $moreFilter);
@@ -73,21 +75,21 @@ try {
     add_filter('get_the_excerpt', $excerptFilter, 20);
     $excerptPost = wp_insert_post(['post_status' => 'publish', 'post_content' => 'One two three four five']);
     $temporaryPosts[] = $excerptPost;
-    $assert(Content::excerpt(get_post($excerptPost)) === 'One two three [more] [filtered]', 'Cards respect native excerpt length, suffix and final filter.');
+    $assert(Excerpt::fromPost(get_post($excerptPost)) === 'One two three [more] [filtered]', 'Cards respect native excerpt length, suffix and final filter.');
     $reusable = wp_insert_post(['post_type' => 'wp_block', 'post_status' => 'publish', 'post_content' => '<!-- wp:paragraph --><p>Reusable excerpt content</p><!-- /wp:paragraph -->']);
     $temporaryPosts[] = $reusable;
     wp_update_post(['ID' => $excerptPost, 'post_content' => '<!-- wp:block {"ref":' . $reusable . '} /-->']);
-    $assert(str_contains(Content::excerpt(get_post($excerptPost)), 'Reusable excerpt content'), 'Reusable blocks contribute native excerpt text.');
+    $assert(str_contains(Excerpt::fromPost(get_post($excerptPost)), 'Reusable excerpt content'), 'Reusable blocks contribute native excerpt text.');
     $shortcodesBeforeExcerpt = $shortcodes;
     wp_update_post(['ID' => $reusable, 'post_content' => '<!-- wp:paragraph --><p>[review_count] Reusable excerpt content</p><!-- /wp:paragraph -->']);
-    $reusableExcerpt = Content::excerpt(get_post($excerptPost));
+    $reusableExcerpt = Excerpt::fromPost(get_post($excerptPost));
     $assert(str_contains($reusableExcerpt, 'Reusable excerpt content'), 'Reusable text survives shortcode removal.');
     $assert($shortcodes === $shortcodesBeforeExcerpt, 'Reusable excerpts strip shortcodes before the native content filters run.');
     $assert(!str_contains($reusableExcerpt, '[review_count]'), 'Shortcode markers are absent from reusable excerpts.');
     wp_update_post(['ID' => $reusable, 'post_content' => '<!-- wp:block {"ref":' . $reusable . '} /--><!-- wp:paragraph --><p>Safe cyclic ending</p><!-- /wp:paragraph -->']);
-    $assert(str_contains(Content::excerpt(get_post($excerptPost)), 'Safe cyclic ending'), 'Cyclic reusable references terminate and preserve remaining text.');
+    $assert(str_contains(Excerpt::fromPost(get_post($excerptPost)), 'Safe cyclic ending'), 'Cyclic reusable references terminate and preserve remaining text.');
     wp_update_post(['ID' => $reusable, 'post_status' => 'private', 'post_content' => '<!-- wp:paragraph --><p>PRIVATE_PATTERN_SECRET</p><!-- /wp:paragraph -->']);
-    $assert(!str_contains(Content::excerpt(get_post($excerptPost)), 'PRIVATE_PATTERN_SECRET'), 'Private reusable content does not leak into card excerpts.');
+    $assert(!str_contains(Excerpt::fromPost(get_post($excerptPost)), 'PRIVATE_PATTERN_SECRET'), 'Private reusable content does not leak into card excerpts.');
     wp_update_post(['ID' => $reusable, 'post_status' => 'publish', 'post_content' => '<!-- wp:paragraph --><p>Budget text</p><!-- /wp:paragraph -->']);
     wp_update_post(['ID' => $excerptPost, 'post_content' => str_repeat('<!-- wp:block {"ref":' . $reusable . '} /-->', 105)]);
     $reusableRenders = 0;
@@ -97,15 +99,15 @@ try {
     };
     add_filter('render_block_core/paragraph', $countReusable);
     try {
-        Content::excerpt(get_post($excerptPost));
+        Excerpt::fromPost(get_post($excerptPost));
         $assert($reusableRenders === 100, 'Wide reusable references have a total expansion budget.');
-        Content::excerpt(get_post($excerptPost));
+        Excerpt::fromPost(get_post($excerptPost));
         $assert($reusableRenders === 200, 'The expansion budget resets for each excerpt.');
     } finally {
         remove_filter('render_block_core/paragraph', $countReusable);
     }
     wp_update_post(['ID' => $excerptPost, 'post_content' => '<!-- wp:review/count /-->']);
-    $assert(str_contains(Content::excerpt(get_post($excerptPost)), 'Dynamic block output'), 'Dynamic blocks allowed by WordPress contribute excerpt text.');
+    $assert(str_contains(Excerpt::fromPost(get_post($excerptPost)), 'Dynamic block output'), 'Dynamic blocks allowed by WordPress contribute excerpt text.');
     remove_filter('excerpt_length', $lengthFilter);
     remove_filter('excerpt_more', $moreFilter);
     remove_filter('excerpt_allowed_blocks', $allowedBlocks);
@@ -119,8 +121,8 @@ try {
     ];
     foreach ($cases as [$query, $getter, $expected]) {
         $GLOBALS['wp_query'] = $GLOBALS['wp_the_query'] = new WP_Query($query);
-        $assert(in_array($expected, $resolver->candidates(), true), 'Core hierarchy captured: ' . $expected);
-        $assert(!in_array('custom/landing', $resolver->candidates(), true), 'The reused resolver does not retain the previous page hierarchy.');
+        $assert(in_array($expected, $resolver->forQuery($GLOBALS['wp_query']), true), 'Core hierarchy captured: ' . $expected);
+        $assert(!in_array('custom/landing', $resolver->forQuery($GLOBALS['wp_query']), true), 'The reused resolver does not retain the previous page hierarchy.');
     }
     register_post_type('review_book', ['public' => true, 'has_archive' => true]);
     register_taxonomy('review_genre', 'review_book', ['public' => true]);
@@ -134,21 +136,22 @@ try {
             'tax_query' => [['taxonomy' => $taxonomy, 'field' => 'term_id', 'terms' => [$term['term_id']]]],
         ]);
         $expected = $taxonomy === 'post_tag' ? 'tag-' . $term['term_id'] : 'taxonomy-review_genre';
-        $assert(in_array($expected, $resolver->candidates(), true), 'Native term hierarchy: ' . $expected);
+        $assert(in_array($expected, $resolver->forQuery($GLOBALS['wp_query']), true), 'Native term hierarchy: ' . $expected);
     }
     $GLOBALS['wp_query'] = $GLOBALS['wp_the_query'] = new WP_Query(['post_type' => 'review_book']);
-    $assert($resolver->candidates() === ['archive-review_book', 'archive'], 'Custom post-type archive hierarchy.');
+    $assert($resolver->forQuery($GLOBALS['wp_query']) === ['archive-review_book', 'archive', 'index'], 'Custom post-type archive hierarchy.');
     $attachment = wp_insert_attachment(['post_title' => 'Review image', 'post_mime_type' => 'image/png']);
     $extraPosts[] = $attachment;
     $GLOBALS['post'] = get_post($attachment);
     $GLOBALS['wp_query'] = $GLOBALS['wp_the_query'] = new WP_Query(['attachment_id' => $attachment]);
-    $assert(in_array('image-png', $resolver->candidates(), true) && in_array('attachment', $resolver->candidates(), true), 'Attachment MIME hierarchy.');
+    $assert(in_array('image-png', $resolver->forQuery($GLOBALS['wp_query']), true) && in_array('attachment', $resolver->forQuery($GLOBALS['wp_query']), true), 'Attachment MIME hierarchy.');
     $GLOBALS['wp_query'] = $GLOBALS['wp_the_query'] = new WP_Query(['cat' => 1]);
     $before = $GLOBALS['wp_filter']['category_template_hierarchy']->callbacks[PHP_INT_MAX] ?? [];
     $failHierarchy = static fn (): never => throw new RuntimeException('Expected hierarchy failure');
     add_filter('category_template_hierarchy', $failHierarchy);
     try {
-        $resolver->candidates();
+        $assert(in_array('category', $resolver->forQuery($GLOBALS['wp_query']), true), 'Explicit query hierarchy does not replay native filters.');
+        get_category_template();
         throw new RuntimeException('The hierarchy exception must propagate.');
     } catch (RuntimeException $error) {
         $assert($error->getMessage() === 'Expected hierarchy failure', 'Exceptions propagate without returning stale candidates.');

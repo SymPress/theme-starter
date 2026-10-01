@@ -6,9 +6,9 @@ namespace SymPress\StarterTheme\Tests\Unit;
 
 use Brain\Monkey\Functions;
 use SymPress\Assets\AssetManager;
+use SymPress\Assets\Loader\EncoreManifest;
 use SymPress\Assets\Script;
 use SymPress\Assets\Style;
-use SymPress\StarterTheme\WordPress\BuildManifest;
 use SymPress\StarterTheme\WordPress\Theme;
 
 final class ThemeTest extends WordPressTestCase
@@ -19,7 +19,7 @@ final class ThemeTest extends WordPressTestCase
         Functions\when('get_template_directory')->justReturn($directory);
         Functions\when('get_template_directory_uri')->justReturn('https://example.test/theme');
         Functions\expect('wp_enqueue_style')->never();
-        $entries = BuildManifest::read($directory . '/build/entrypoints.json');
+        $entries = EncoreManifest::read($directory . '/build/entrypoints.json');
         self::assertArrayHasKey('sympress-starter-app', $entries);
         self::assertArrayNotHasKey('sympress-starter-editor', $entries);
         $manager = new AssetManager();
@@ -38,9 +38,9 @@ final class ThemeTest extends WordPressTestCase
         file_put_contents($asset, '// test');
         try {
             file_put_contents($file, json_encode(['entrypoints' => ['sympress-starter-app' => ['js' => [basename($asset)]]]]));
-            self::assertArrayHasKey('sympress-starter-app', BuildManifest::read($file));
+            self::assertArrayHasKey('sympress-starter-app', EncoreManifest::read($file));
             file_put_contents($file, json_encode(['entrypoints' => ['sympress-starter-app' => ['js' => ['../' . basename($asset)]]]]));
-            self::assertNull(BuildManifest::read($file));
+            self::assertNull(EncoreManifest::read($file));
         } finally {
             unlink($file);
             unlink($asset);
@@ -68,11 +68,11 @@ final class ThemeTest extends WordPressTestCase
         Functions\when('get_template_directory')->justReturn($directory);
         Functions\when('get_template_directory_uri')->justReturn('https://example.test/theme');
         Functions\when('is_admin')->justReturn(false);
-        Functions\expect('wp_enqueue_style')->times(5)->with('sympress-starter-unbuilt', 'https://example.test/theme/resources/css/site.css', [], '0.1.2');
+        Functions\expect('wp_enqueue_style')->times(5)->with('sympress-starter-unbuilt', 'https://example.test/theme/resources/css/site.css', [], '0.2.0');
         try {
             foreach (['{broken', 'null', '{}', '{"entrypoints":false}', '{"entrypoints":{"sympress-starter-app":{"css":"wrong"},"sympress-starter-editor":{"css":[]}}}'] as $json) {
                 file_put_contents($directory . '/build/entrypoints.json', $json);
-                self::assertNull(BuildManifest::read($directory . '/build/entrypoints.json'));
+                self::assertNull(EncoreManifest::read($directory . '/build/entrypoints.json'));
                 (new Theme())->assets(new AssetManager());
             }
         } finally {

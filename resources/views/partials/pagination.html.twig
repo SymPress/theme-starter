@@ -1,0 +1,14 @@
+{% set pagination = pagination({prev_text: __('Zurück'), next_text: __('Weiter')}) %}
+{% if pagination.pages %}
+  <nav class="navigation pagination" aria-label="{{ __('Beitragsnavigation') }}">
+    <div class="nav-links">
+      {% if pagination.prev %}<a class="prev page-numbers" href="{{ pagination.prev.url }}">{{ pagination.prev.title }}</a>{% endif %}
+      {% for page in pagination.pages %}
+        {% if page.current %}<span class="page-numbers current" aria-current="page">{{ page.title }}</span>
+        {% elseif page.url %}<a class="page-numbers" href="{{ page.url }}">{{ page.title }}</a>
+        {% else %}<span class="page-numbers dots">{{ page.title }}</span>{% endif %}
+      {% endfor %}
+      {% if pagination.next %}<a class="next page-numbers" href="{{ pagination.next.url }}">{{ pagination.next.title }}</a>{% endif %}
+    </div>
+  </nav>
+{% endif %}

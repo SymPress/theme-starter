@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0 — 2026-10-01
+
+- Move generic rendering to Twig Bundle 1.1 and asset helpers to Assets 1.2.
+- Adopt child-aware `@theme`, lazy Post models, menu/pagination objects and optional ACF metadata.
+- Replace the theme-local composers and context hooks; see `UPGRADE-0.2.md`.
+- Add real WordPress CI, deployment guidance and an explicit public API policy.
+
 ## 0.1.2 — 2026-10-01
 
 - Use WordPress's native `theme.json` preset variables in frontend and editor

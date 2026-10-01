@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use SymPress\Kernel\App;
 use SymPress\StarterTheme\WordPress\Theme;
-use SymPress\StarterTheme\View\TemplateResolver;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,7 +15,6 @@ $theme = class_exists(App::class) && App::container()?->has(Theme::class)
     : null;
 
 if ($theme instanceof Theme) {
-    App::make(TemplateResolver::class)->register();
     $theme->register();
 } else {
     add_action('admin_notices', static function (): void {

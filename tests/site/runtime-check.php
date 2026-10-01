@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use SymPress\Kernel\App;
-use SymPress\StarterTheme\View\Renderer;
-use SymPress\StarterTheme\View\TemplateResolver;
+use SymPress\TwigBundle\WordPress\ThemeRenderer;
+use SymPress\TwigBundle\WordPress\TemplateHierarchy;
 use SymPress\TwigBundle\Renderer\TemplateRendererInterface;
 
 if (wp_get_environment_type() !== 'local' || DB_NAME !== 'theme_test') {
@@ -16,10 +16,10 @@ $assert = static function (bool $condition, string $message): void {
         throw new RuntimeException($message);
     }
 };
-$assert(App::make(Renderer::class) instanceof Renderer, 'Theme renderer must be public in the compiled site container.');
+$assert(App::make(ThemeRenderer::class) instanceof ThemeRenderer, 'Theme renderer must be public in the compiled site container.');
 $templates = App::make(TemplateRendererInterface::class);
 $assert($templates instanceof TemplateRendererInterface, 'Use the real SymPress Twig renderer.');
-$assert($templates->exists('@StarterTheme/home.html.twig'), 'Theme namespace must be registered by the bundle.');
+$assert($templates->exists('@theme/home.html.twig'), 'Theme namespace must be registered by the bundle.');
 $assert(current_theme_supports('editor-styles'), 'Editor styles must be enabled.');
 $assert(current_theme_supports('post-thumbnails'), 'Featured images must be enabled.');
 $assert(isset($GLOBALS['editor_styles'][0]) && str_contains($GLOBALS['editor_styles'][0], 'build/sympress-starter-editor.'), 'Compiled editor stylesheet must be registered.');
@@ -37,12 +37,11 @@ try {
     update_option('page_for_posts', 0);
     $GLOBALS['wp_query'] = new WP_Query(['page_id' => $page->ID]);
     $GLOBALS['wp_the_query'] = $GLOBALS['wp_query'];
-    $resolver = new TemplateResolver($templates);
-    $resolver->register();
+    $resolver = new TemplateHierarchy();
     get_front_page_template();
     get_page_template();
     get_singular_template();
-    $assert($resolver->resolve($resolver->candidates()) === '@StarterTheme/page.html.twig', 'Static front page must use page content.');
+    $assert(App::make(ThemeRenderer::class)->resolve($resolver->forQuery($GLOBALS['wp_query'])) === '@theme/singular.html.twig', 'Static front page must use page content.');
     echo "PASS: compiled container, real Twig renderer, namespace, editor styles, pattern and static homepage.\n";
 } finally {
     foreach ($options as $key => $value) {

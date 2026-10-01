@@ -13,13 +13,17 @@ final class StarterThemeBundle extends AbstractBundle
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
-        $container->registerForAutoconfiguration(View\ContextComposer::class)->addTag('sympress_starter.context_composer');
     }
 
     public function prependExtension(ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
-        $container->prependExtensionConfig('twig', [
-            'paths' => [$this->path() . '/resources/views' => 'StarterTheme'],
+        $container->prependExtensionConfig('sympress_twig', [
+            'wordpress' => ['themes' => ['sympress-starter' => []]],
         ]);
+    }
+
+    public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
+    {
+        $container->register(WordPress\Theme::class)->setPublic(true);
     }
 }

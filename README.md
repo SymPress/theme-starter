@@ -1,147 +1,110 @@
 # SymPress Starter Theme
 
-A WordPress starter theme with **Symfony, Twig, Tailwind CSS 4 and Webpack Encore 7**.
-It includes an editorial layout, block editor styles, template-specific context
-composers and a Composer-managed build workflow.
-
-Inspired by [Sage](https://github.com/roots/sage), built for the SymPress stack.
+A WordPress starter theme with Symfony, Twig, Tailwind CSS 4 and Webpack Encore 7.
+Includes an editorial layout, editor styles and a Composer-managed build workflow.
 
 ![SymPress Starter Theme](screenshot.png)
 
-## Requirements
+## Requirements and installation
 
-- PHP 8.5 and Composer 2.
-- Node 22.18+, 24.11+ or 26+ within the ranges in `package.json`.
-- WordPress 6.6+ for theme.json v3.
-- A Composer-managed SymPress site whose MU plugin boots
-  `SymPress\Kernel\Kernel\SiteKernel` before the theme loads.
+PHP 8.5, Composer 2, WordPress 6.6+ and Node within the ranges in `package.json`.
+The site's MU plugin must boot `SymPress\Kernel\Kernel\SiteKernel` before loading
+the theme. The site owns autoloading, the container and the Twig environment.
 
-The site owns autoloading, the kernel and the Twig environment. This theme is
-installed through the site's Composer project, not as a standalone WordPress ZIP.
-Runtime dependencies use stable releases: Assets `^1.1`, Kernel `^1.1` and
-Twig Bundle `^1.0.2`.
-
-## Installation
-
-From your **site root**, clone the theme into a package directory and register it
-as a Composer path repository:
+From the site root, install the stable package:
 
 ```sh
-git clone https://github.com/SymPress/theme-starter.git packages/theme-starter
-composer config repositories.theme-starter path packages/theme-starter
-composer require sympress/theme-starter:@dev
+composer require sympress/theme-starter:^0.2
 ```
 
-The site's `composer.json` must allow `composer/installers` and define the theme
-installation path. Adapt this example to your WordPress directory layout:
+Allow `composer/installers` and configure the site's installation path:
 
 ```json
 {
-  "extra": {
-    "installer-paths": {
-      "public/wp-content/themes/{$name}/": ["type:wordpress-theme"]
-    }
-  },
-  "config": {
-    "allow-plugins": { "composer/installers": true }
-  }
+  "extra": { "installer-paths": {
+    "public/wp-content/themes/{$name}/": ["type:wordpress-theme"]
+  } },
+  "config": { "allow-plugins": { "composer/installers": true } }
 }
 ```
 
-Build assets from the **theme source directory**:
+Runtime dependencies are stable Assets `^1.2`, Kernel `^1.1` and Twig Bundle
+`^1.1`. Production asset compilation uses `sympress/asset-compiler` in the site
+project; see [deployment](docs/deployment.md). Source archives contain no built
+assets and are not standalone WordPress ZIP installations.
+
+For customization, clone the theme into `packages/theme-starter`, register that
+directory as a Composer path repository and require `sympress/theme-starter:@dev`.
+Run `npm ci && npm run build` there, then activate `sympress-starter` through
+WordPress. The package's `extra.kernel` metadata discovers its theme bundle;
+`prependExtension()` registers its slug with Twig Bundle.
+
+## Development and customization
 
 ```sh
-cd packages/theme-starter
 npm ci
-npm run build
+npm run dev       # development build
+npm run watch     # watch changes
+npm run build     # production assets
 ```
-
-Activate **SymPress Starter** in Appearance → Themes, or run this from the site root:
-
-```sh
-wp --path=public/wp theme activate sympress-starter
-```
-
-For sites using `sympress/asset-compiler`, add `sympress/theme-starter` to the
-root asset-compiler package allowlist. The theme already declares its build
-scripts and source inputs in `extra.sympress.asset-compiler`.
-
-## Development
-
-```sh
-npm run dev       # development build with source maps
-npm run watch     # rebuild on changes
-npm run build     # minified, content-hashed production assets
-```
-
-Tailwind scans Twig templates, block patterns and JavaScript. Use complete utility
-class names rather than dynamically constructed fragments. Frontend Preflight
-and editor styles are separate. Encore's runtime public path is `auto`, so lazy
-chunks resolve from the script URL on nested routes. The relative manifest-path
-warning is intentional; asset URLs are resolved against the active theme.
-
-## Customization
 
 | Concern | Source |
 | --- | --- |
-| Site title, description and front page | WordPress Settings |
-| Menus | WordPress Appearance → Menus |
 | Colors, typography and spacing | `theme.json` |
+| Tailwind aliases for WordPress presets | `resources/css/tailwind-theme.css` |
 | Frontend styles | `resources/css/site.css`, `resources/css/app.css` |
 | Editor styles | `resources/css/editor.css` |
-| Twig templates | `resources/views/` |
-| Template data | `src/WordPress/Context.php` |
-| WordPress setup and assets | `src/WordPress/Theme.php` |
-| Template selection | `src/View/TemplateResolver.php` |
+| Twig templates and menu/pagination markup | `resources/views/` |
+| Context and template selection | Twig Bundle's WordPress layer |
+| Theme setup, assets and metadata | `src/WordPress/Theme.php` |
 | Example block pattern | `patterns/editorial-intro.php` |
 
-Edit colors and fonts in `theme.json`. WordPress provides the corresponding
-`--wp--preset--*` CSS variables in the frontend and editor; no token generator is
-needed. `resources/css/tailwind-theme.css` maps those variables to Tailwind utility
-names without duplicating their values. When adding a new preset, add an alias
-there if you also want a named utility such as `bg-brand`.
+WordPress provides `--wp--preset--*` variables from `theme.json`. There is no token
+generator. Add corresponding aliases to `tailwind-theme.css` for named utilities.
+Use complete Tailwind class names. Editor styles remain separate from frontend
+Preflight. Encore's runtime public path is `auto`; the relative manifest-path
+warning is intentional and lazy chunks resolve from their script URL.
 
-Twig uses the `@StarterTheme` namespace and WordPress's native template hierarchy.
-Add templates for categories, taxonomies, authors, dates, post types, attachments
-or page slugs as needed. Custom page templates live in `resources/views/custom/`
-and declare a `Template Name:` header inside a Twig comment. Native PHP templates
-take precedence. A static front page displays the page's editor content by default.
+## Twig and WordPress
 
-Use `sympress_starter/context` to extend view data, or implement `ContextComposer`
-as a service for template-specific data. Autoconfiguration tags the service;
-`supports($template)` receives the resolved `@StarterTheme/*.html.twig` name.
-The `sympress_starter/template_candidates` filter adjusts template selection.
+`@theme` searches child views before parent views. The layout extends
+`@wordpress/document.html.twig`. The native template loader runs once; Twig
+Bundle captures the hierarchy and selects Twig through `template_include`.
+Plugin PHP overrides and more specific native PHP templates retain precedence;
+equal specificity prefers Twig. `index.php` is a 503 configuration guard.
 
-Callers outside the WordPress template loader can pass explicit templates and data:
+The `posts` collection is lazy, countable and repeatable. Iterate it directly so
+WordPress template tags and plugin content filters see the current global post.
+Use `loop.first` for featured layouts instead of materializing with `first` or
+`slice`. Posts expose `content`, `excerpt(30)`, `thumbnail(size, attributes)`,
+`categories` and `meta(key)`. Menus and pagination are objects, with markup owned
+by the theme. ACF metadata conversion is optional and lives in Twig Bundle.
 
-```php
-$renderer->render(['partials/post-summary'], ['post' => $postViewData]);
-```
+Use `sympress/twig/context` and `sympress/twig/template_candidates` for filters.
+Autoconfigured services implement `TemplateComposerInterface`, optionally with
+`#[AsTemplateComposer(templates: ['page-*'], priority: 10)]`. Register services in
+the theme bundle's `loadExtension()`. Custom editor templates live in
+`resources/views/custom/*.html.twig` with `Template Name` and optional
+`Template Post Type` headers. They are registered in admin and frontend requests.
 
-The candidate filter also applies to explicit candidates. Query-based rendering
-calls core template getters again during Twig fallback selection, so callbacks
-on `{type}_template` should tolerate multiple calls. Explicit candidates avoid
-that second hierarchy lookup.
+Inject `SymPress\TwigBundle\WordPress\ThemeRenderer` for explicit rendering or
+`renderBlock('singular', 'content', $context)`. For REST/AJAX/CLI obtain candidates
+from `TemplateHierarchy::forQuery($query)` and context from
+`QueryContextProvider::context($query)`.
 
-Twig autoescaping is enabled. Only WordPress-rendered HTML is marked trusted.
-Available helpers include `__`, `_x`, `_n`, `sprintf`, `menu` and the explicit
-`esc_html`, `esc_attr`, `esc_url` filters. Theme strings use the `sympress-starter`
-text domain and German source copy. See [translations](languages/README.md).
+Twig escapes plain text and URLs once. Only WordPress-rendered HTML is trusted;
+the lint rule rejects `raw`. Protected posts display the password form and
+withhold protected metadata/images/comments. Excerpts honor native filters and
+expand public reusable blocks with cycle, depth and reference limits. Metadata
+reads stored plain text without rendering content.
 
-Card excerpts honor WordPress excerpt filters. Public reusable blocks use the
-excerpt block allowlist, cycle detection, a maximum depth of 20 and a total limit
-of 100 reusable references per excerpt. Additional references are omitted. Custom
-dynamic blocks require `excerpt_allowed_blocks` opt-in; authored excerpts are
-useful for complex layouts. Protected posts do not expose content or excerpts.
+See the [WordPress API reference](https://github.com/SymPress/twig-bundle/blob/main/docs/wordpress.md),
+[upgrade guide](UPGRADE-0.2.md), [translations](languages/README.md) and
+[stability policy](docs/stability.md). When renaming, update the Composer name,
+installer name, registered slug, kernel entry, namespace, textdomain, style header
+and asset-compiler allowlist together, then rebuild the site's caches.
 
-When renaming the theme, update its Composer name, installer name, kernel entry,
-PHP namespace, text domain, `style.css` and asset-compiler allowlist together.
-The kernel entry must match the installed theme directory. Rebuild the site's
-autoload/container cache afterward. Child-theme discovery is not implemented.
-
-## Testing
-
-From the theme directory:
+## Verification
 
 ```sh
 composer install
@@ -153,50 +116,24 @@ npx playwright install --with-deps chromium
 npm run test:chunks
 ```
 
-Composer QA includes syntax checks, Twig parsing, PHPCS, PHPStan and PHPUnit.
-It uses the PHP executable that launches Composer. GitHub Actions also checks
-translations, both generated token files and dependency audits on PRs and `main`.
+The [disposable fixture](tests/site/README.md) adds real WordPress and browser
+checks. Run them sequentially because they share a database. Automated tests do
+not replace manual screen-reader testing. The fixture must never be deployed.
 
-The [disposable WordPress fixture](tests/site/README.md) provides integration and
-browser tests. Run its WordPress checks and `npm run test:browser` sequentially
-because they share a test database. Screenshots and traces go to ignored
-`test-results/` directories. The fixture uses deliberately public test credentials
-and must never be deployed to a live site.
+## Deployment and extension hooks
 
-## Deployment
+Deploy compiled `build/` with PHP, Twig views, source CSS, patterns, translations,
+`style.css`, `theme.json` and `screenshot.png`; the site manages runtime Composer
+dependencies. Invalid manifests produce an admin notice and readable CSS fallback.
+Manifest paths and symlinks outside `build/` are rejected. Frontend and optional
+editor entries are validated independently.
 
-Deploy the production `build/` directory alongside PHP, configuration,
-`resources/views/`, `resources/css/`, translations, patterns, `style.css`,
-`theme.json` and `screenshot.png`. The site manages Composer runtime dependencies.
-Development dependencies, tests, caches and local environment files are not
-deployment artifacts. Build output is ignored in Git and must be generated.
+Disable small CSS inlining with `sympress_starter/inline_styles`. The plain-text
+meta-description fallback stands down for common SEO plugins. Use
+`sympress_starter/meta_description_enabled` to disable it or
+`sympress_starter/meta_description` to customize its text. Protected content,
+previews, search and 404 pages are excluded.
 
-Missing or invalid manifests show an admin notice and a readable CSS fallback.
-Frontend entries are validated independently of optional editor entries. Nested
-build paths are supported; paths and symlinks resolving outside `build/` are
-rejected.
-
-Small production CSS files are inlined when they contain no relative URL or
-import references. To keep all styles external, for example with a strict CSP:
-
-```php
-add_filter('sympress_starter/inline_styles', '__return_false');
-```
-
-Configure compression on the web server. Use long immutable cache lifetimes for
-hashed assets, not for HTML, manifests or unhashed files.
-
-The theme provides a plain-text meta-description fallback and stands down for
-Yoast SEO, Rank Math, All in One SEO, SEOPress and The SEO Framework. Disable it
-for another SEO integration with:
-
-```php
-add_filter('sympress_starter/meta_description_enabled', '__return_false');
-```
-
-Protected content, previews, search and 404 pages are excluded from the fallback.
-Use `sympress_starter/meta_description` to customize its text.
-
-## License
-
-[GPL-2.0-or-later](LICENSE.md). See [CHANGELOG.md](CHANGELOG.md) for release changes.
+See [production deployment and cache warmup](docs/deployment.md),
+[security](SECURITY.md) and [changelog](CHANGELOG.md).
+Licensed under [GPL-2.0-or-later](LICENSE.md).

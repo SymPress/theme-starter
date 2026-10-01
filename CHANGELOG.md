@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.0 — 2026-10-01
+
+- Require Twig Bundle 1.2 with public author profiles, safe filters, admin rendering,
+  model dependency injection and native menu-object integration.
+- Render the featured post and subsequent grid in two repeatable collection loops,
+  with complete section wrappers independent of loop.first/loop.last boundaries.
+- Compile Twig templates during linting so unknown functions and filters fail QA.
+- Retain stable Assets 1.2 and the official asset-compiler deployment workflow.
+
 ## 1.0.1 — 2026-10-01
 
 - Require Twig Bundle 1.1.1 or newer and lock the HTML-filter security fix.

@@ -14,7 +14,7 @@ the theme. The site owns autoloading, the container and the Twig environment.
 From the site root, install the stable package:
 
 ```sh
-composer require sympress/theme-starter:^0.2
+composer require sympress/theme-starter:^1.0
 ```
 
 Allow `composer/installers` and configure the site's installation path:

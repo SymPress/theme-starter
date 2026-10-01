@@ -16,7 +16,7 @@
   "autoload": { "psr-4": { "SymPress\\StarterTheme\\": "src/" } },
   "autoload-dev": { "psr-4": { "SymPress\\StarterTheme\\Tests\\": "tests/" } },
   "extra": {
-    "branch-alias": { "dev-main": "0.2.x-dev" },
+    "branch-alias": { "dev-main": "1.0.x-dev" },
     "installer-name": "sympress-starter",
     "kernel": {
       "bundle": "SymPress\\StarterTheme\\StarterThemeBundle",

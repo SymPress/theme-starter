@@ -88,6 +88,22 @@ try {
     $assert(str_contains(Content::excerpt(get_post($excerptPost)), 'Safe cyclic ending'), 'Cyclic reusable references terminate and preserve remaining text.');
     wp_update_post(['ID' => $reusable, 'post_status' => 'private', 'post_content' => '<!-- wp:paragraph --><p>PRIVATE_PATTERN_SECRET</p><!-- /wp:paragraph -->']);
     $assert(!str_contains(Content::excerpt(get_post($excerptPost)), 'PRIVATE_PATTERN_SECRET'), 'Private reusable content does not leak into card excerpts.');
+    wp_update_post(['ID' => $reusable, 'post_status' => 'publish', 'post_content' => '<!-- wp:paragraph --><p>Budget text</p><!-- /wp:paragraph -->']);
+    wp_update_post(['ID' => $excerptPost, 'post_content' => str_repeat('<!-- wp:block {"ref":' . $reusable . '} /-->', 105)]);
+    $reusableRenders = 0;
+    $countReusable = static function (string $html) use (&$reusableRenders): string {
+        ++$reusableRenders;
+        return $html;
+    };
+    add_filter('render_block_core/paragraph', $countReusable);
+    try {
+        Content::excerpt(get_post($excerptPost));
+        $assert($reusableRenders === 100, 'Wide reusable references have a total expansion budget.');
+        Content::excerpt(get_post($excerptPost));
+        $assert($reusableRenders === 200, 'The expansion budget resets for each excerpt.');
+    } finally {
+        remove_filter('render_block_core/paragraph', $countReusable);
+    }
     wp_update_post(['ID' => $excerptPost, 'post_content' => '<!-- wp:review/count /-->']);
     $assert(str_contains(Content::excerpt(get_post($excerptPost)), 'Dynamic block output'), 'Dynamic blocks allowed by WordPress contribute excerpt text.');
     remove_filter('excerpt_length', $lengthFilter);

@@ -11,9 +11,11 @@ PHP 8.5, Composer 2, WordPress 6.6+ and Node within the ranges in `package.json`
 The site's MU plugin must boot `SymPress\Kernel\Kernel\SiteKernel` before loading
 the theme. The site owns autoloading, the container and the Twig environment.
 
-From the site root, install the stable package:
+From the site root, register the GitHub repository and install the stable package
+(the theme is distributed through GitHub tags, not currently listed on Packagist):
 
 ```sh
+composer config repositories.sympress-theme vcs https://github.com/SymPress/theme-starter.git
 composer require sympress/theme-starter:^1.0
 ```
 

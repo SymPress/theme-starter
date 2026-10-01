@@ -14,6 +14,10 @@ the theme. The site owns autoloading, the container and the Twig environment.
 From the site root, register the GitHub repository and install the stable package
 (the theme is distributed through GitHub tags, not currently listed on Packagist):
 
+The repository is currently private. Composer needs GitHub credentials with
+repository access, supplied through the site's Composer authentication (for
+example `COMPOSER_AUTH` in CI). No repository visibility change is required.
+
 ```sh
 composer config repositories.sympress-theme vcs https://github.com/SymPress/theme-starter.git
 composer require sympress/theme-starter:^1.0

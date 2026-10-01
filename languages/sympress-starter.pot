@@ -13,7 +13,7 @@ msgstr ""
 msgid "Die Kommentare sind geschlossen."
 msgstr ""
 
-#: src/WordPress/Theme.php:156
+#: src/WordPress/Theme.php:157
 msgid "Die SymPress-Starter-Assets fehlen oder sind beschädigt. Bitte npm ci && npm run build im Theme-Verzeichnis ausführen."
 msgstr ""
 
@@ -53,7 +53,7 @@ msgstr ""
 msgid "Footernavigation"
 msgstr ""
 
-#: src/WordPress/Theme.php:48
+#: src/WordPress/Theme.php:49
 msgid "Fußnavigation"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Groß"
 msgstr ""
 
-#: resources/views/partials/header.html.twig:4 src/WordPress/Theme.php:47
+#: resources/views/partials/header.html.twig:4 src/WordPress/Theme.php:48
 msgid "Hauptnavigation"
 msgstr ""
 

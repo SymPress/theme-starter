@@ -37,7 +37,7 @@ WordPress site title, description, menus and posts; it does not insert demo cont
 - The site's MU plugin must boot `SymPress\Kernel\Kernel\SiteKernel` before the
   theme loads. Use the existing SymPress site's bootstrap. The theme never boots
   a second kernel and is not a standalone WordPress ZIP installation.
-- Production dependencies use stable releases: assets `^1.0.1`, kernel `^1.1`,
+- Production dependencies use stable releases: assets `^1.1`, kernel `^1.1`,
   twig-bundle `^1.0.2`. A consuming site maintains its own root lock.
 
 ## Install in a SymPress site
@@ -89,6 +89,9 @@ The package's `extra.kernel` metadata makes the active theme discoverable. Its
 bundle registers services and the `@StarterTheme` Twig namespace. Assets load
 through `sympress/assets` from Encore's `build/entrypoints.json`. There is no
 hardcoded `/wp-content` URL in the theme runtime.
+
+Validated entries are passed to the public `EncoreEntrypointsLoader::loadFromArray()`
+API, available since Assets 1.1.0. No theme-local parser subclass is needed.
 
 For sites using `sympress/asset-compiler`, enable `sympress/theme-starter` in the
 root asset-compiler package allowlist. The package already declares its build

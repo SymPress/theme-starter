@@ -6,12 +6,17 @@
   "require": {
     "php": "^8.5",
     "composer/installers": "^2.3",
-    "sympress/assets": "dev-main",
-    "sympress/kernel": "dev-main",
-    "sympress/twig-bundle": "dev-main"
+    "symfony/dependency-injection": "^8.1",
+    "sympress/assets": "^1.0.1",
+    "sympress/kernel": "^1.1",
+    "sympress/twig-bundle": "^1.0.2",
+    "twig/twig": "^3.22"
   },
+  "require-dev": { "brain/monkey": "^2.6", "nikic/php-parser": "^5.9", "sympress/qa": "^0.1" },
   "autoload": { "psr-4": { "SymPress\\StarterTheme\\": "src/" } },
+  "autoload-dev": { "psr-4": { "SymPress\\StarterTheme\\Tests\\": "tests/" } },
   "extra": {
+    "branch-alias": { "dev-main": "0.1.x-dev" },
     "installer-name": "sympress-starter",
     "kernel": {
       "bundle": "SymPress\\StarterTheme\\StarterThemeBundle",
@@ -22,17 +27,21 @@
         "script": { "$mode": { "$default": "build", "production": "build:production" } },
         "dependencies": "install",
         "package-manager": "npm",
-        "src-paths": ["resources", "templates", "patterns", "webpack.config.js", "postcss.config.js", "package.json", "package-lock.json"]
+        "src-paths": ["resources", "patterns", "theme.json", "scripts/design-tokens.mjs", "webpack.config.js", "postcss.config.js", "package.json", "package-lock.json"]
       }
     }
   },
   "scripts": {
-    "test": "@php tests/run.php",
+    "test": ["qa tests", "@php tests/run.php"],
+    "cs": "qa cs",
+    "cs:fix": "qa cs:fix",
+    "static-analysis": "qa static-analysis",
+    "i18n": "@php scripts/extract-translations.php",
     "lint:twig": "@php scripts/lint-twig.php",
     "lint:php": "@php scripts/lint-php.php",
-    "qa": ["@composer validate --strict", "@lint:php", "@lint:twig", "@test"]
+    "qa": ["@composer validate --strict", "@lint:php", "@lint:twig", "@cs", "@static-analysis", "@test"]
   },
-  "config": { "sort-packages": true, "allow-plugins": { "composer/installers": true } },
-  "minimum-stability": "dev",
+  "config": { "sort-packages": true, "allow-plugins": { "composer/installers": true, "dealerdirect/phpcodesniffer-composer-installer": true, "phpstan/extension-installer": true } },
+  "minimum-stability": "stable",
   "prefer-stable": true
 }

@@ -6,16 +6,61 @@ namespace SymPress\StarterTheme\View;
 
 use SymPress\TwigBundle\Renderer\TemplateRendererInterface;
 
-final readonly class TemplateResolver
+final class TemplateResolver
 {
-    public function __construct(private TemplateRendererInterface $templates)
+    /** @var list<string> */
+    private array $hierarchy = [];
+    private bool $registered = false;
+
+    public function __construct(private readonly TemplateRendererInterface $templates)
     {
+    }
+
+    public function register(): void
+    {
+        if ($this->registered) {
+            return;
+        }
+        $this->registered = true;
+        foreach (['404', 'archive', 'attachment', 'author', 'category', 'date', 'embed', 'frontpage', 'home', 'index', 'page', 'paged', 'privacypolicy', 'search', 'single', 'singular', 'tag', 'taxonomy'] as $type) {
+            add_filter($type . '_template_hierarchy', $this->capture(...), PHP_INT_MAX);
+        }
+        add_filter('theme_page_templates', $this->pageTemplates(...));
+    }
+
+    /**
+     * Observe the hierarchy in the order WordPress evaluates it.
+     *
+     * @param list<string> $templates
+     * @return list<string>
+     */
+    public function capture(array $templates): array
+    {
+        $this->hierarchy = array_values(array_unique([...$this->hierarchy, ...$this->normalize($templates)]));
+        return $templates;
+    }
+
+    /**
+     * @param array<string, string> $templates
+     * @return array<string, string>
+     */
+    public function pageTemplates(array $templates): array
+    {
+        foreach (glob(get_template_directory() . '/resources/views/custom/*.html.twig') ?: [] as $file) {
+            $headers = get_file_data($file, ['name' => 'Template Name']);
+            if ($headers['name'] === '') {
+                continue;
+            }
+
+            $templates['custom/' . basename($file)] = $headers['name'];
+        }
+        return $templates;
     }
 
     /** @param list<string> $candidates */
     public function resolve(array $candidates): string
     {
-        foreach ([...$candidates, 'index'] as $candidate) {
+        foreach ([...$this->normalize($candidates), 'index'] as $candidate) {
             $template = '@StarterTheme/' . $candidate . '.html.twig';
             if ($this->templates->exists($template)) {
                 return $template;
@@ -28,30 +73,28 @@ final readonly class TemplateResolver
     /** @return list<string> */
     public function candidates(): array
     {
-        if (is_404()) {
-            return ['404'];
-        }
-        if (is_search()) {
-            return ['search'];
-        }
+        $filtered = apply_filters('sympress_starter/template_candidates', $this->hierarchy);
+        return is_array($filtered) ? $this->normalize($filtered) : $this->hierarchy;
+    }
 
-        $candidates = [];
-        if (is_front_page()) {
-            $candidates[] = 'front-page';
-        }
-        if (is_home()) {
-            $candidates[] = 'home';
-        } elseif (is_page()) {
-            $candidates = [...$candidates, 'page-' . get_queried_object_id(), 'page', 'singular'];
-        } elseif (is_singular()) {
-            $candidates = [...$candidates, 'single-' . get_post_type(), 'single', 'singular'];
-        } elseif (is_archive()) {
-            $candidates[] = 'archive';
-        }
+    /**
+     * @param array<mixed> $templates
+     * @return list<string>
+     */
+    private function normalize(array $templates): array
+    {
+        $result = [];
+        foreach ($templates as $template) {
+            if (!is_string($template) || $template === '' || preg_match('~(^/|\\\\|\x00|:|@|(?:^|/)\.\.(?:/|$))~', $template)) {
+                continue;
+            }
+            $name = preg_replace('/(?:\.html\.twig|\.php)$/', '', $template);
+            if ($name === null || $name === '') {
+                continue;
+            }
 
-        /** @var list<string> $candidates */
-        $candidates = apply_filters('sympress_starter/template_candidates', $candidates);
-
-        return $candidates;
+            $result[] = $name;
+        }
+        return array_values(array_unique($result));
     }
 }

@@ -12,8 +12,9 @@
     "dev": "encore dev",
     "watch": "encore dev --watch",
     "build": "encore production",
-    "build:production": "encore production",
+    "build:production": "npm run build",
     "test:browser": "playwright test",
+    "test:chunks": "NODE_ENV=production node scripts/check-chunks.mjs",
     "preview": "node scripts/preview-server.cjs"
   },
   "devDependencies": {
@@ -25,7 +26,7 @@
     "postcss": "^8.5.19",
     "postcss-loader": "^8.2.1",
     "tailwindcss": "4.3.3",
-    "webpack": "^5.0.0",
+    "webpack": "^5.111.1",
     "webpack-cli": "^6.0.1"
   }
 }

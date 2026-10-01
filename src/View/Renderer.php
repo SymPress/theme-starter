@@ -20,6 +20,6 @@ final readonly class Renderer
     {
         $template = $this->resolver->resolve($this->resolver->candidates());
 
-        return $this->templates->render($template, $this->context->build());
+        return $this->templates->render($template, $this->context->build($template));
     }
 }

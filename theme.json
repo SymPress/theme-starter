@@ -4,27 +4,37 @@
   "settings": {
     "appearanceTools": true,
     "layout": { "contentSize": "48rem", "wideSize": "80rem" },
+    "spacing": { "spacingSizes": [
+      { "slug": "20", "name": "XS", "size": "0.5rem" },
+      { "slug": "30", "name": "S", "size": "1rem" },
+      { "slug": "40", "name": "M", "size": "1.5rem" },
+      { "slug": "50", "name": "L", "size": "2rem" },
+      { "slug": "60", "name": "XL", "size": "3rem" },
+      { "slug": "70", "name": "XXL", "size": "5rem" }
+    ] },
     "color": {
       "defaultPalette": false,
       "palette": [
-        { "slug": "brand", "name": "SymPress Blue", "color": "#3858e9" },
-        { "slug": "ink", "name": "Ink", "color": "#101517" },
-        { "slug": "paper", "name": "Paper", "color": "#f6f7f7" },
-        { "slug": "muted", "name": "Muted", "color": "#50575e" },
-        { "slug": "white", "name": "White", "color": "#ffffff" }
+        { "slug": "brand", "name": "SymPress Blau", "color": "#3858e9" },
+        { "slug": "ink", "name": "Text", "color": "#101517" },
+        { "slug": "paper", "name": "Papier", "color": "#f6f7f7" },
+        { "slug": "muted", "name": "Sekundärtext", "color": "#50575e" },
+        { "slug": "line", "name": "Linie", "color": "#dcdcde" },
+        { "slug": "brand-deep", "name": "SymPress Dunkelblau", "color": "#2a46ce" },
+        { "slug": "white", "name": "Weiß", "color": "#ffffff" }
       ]
     },
     "typography": {
       "fluid": true,
       "fontFamilies": [
-        { "slug": "body", "name": "System Sans", "fontFamily": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" },
-        { "slug": "display", "name": "Editorial Serif", "fontFamily": "'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif" }
+        { "slug": "body", "name": "Systemschrift", "fontFamily": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" },
+        { "slug": "display", "name": "Redaktionelle Serifenschrift", "fontFamily": "'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif" }
       ],
       "fontSizes": [
-        { "slug": "small", "name": "Small", "size": "0.875rem" },
-        { "slug": "medium", "name": "Body", "size": "1rem" },
-        { "slug": "large", "name": "Large", "size": "1.5rem" },
-        { "slug": "x-large", "name": "Heading", "size": "2.5rem" }
+        { "slug": "small", "name": "Klein", "size": "0.875rem" },
+        { "slug": "medium", "name": "Fließtext", "size": "1rem" },
+        { "slug": "large", "name": "Groß", "size": "1.5rem" },
+        { "slug": "x-large", "name": "Überschrift", "size": "2.5rem" }
       ]
     }
   },

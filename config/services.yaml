@@ -6,7 +6,8 @@ services:
   SymPress\StarterTheme\View\WordPressExtension:
     tags: [twig.extension]
 
-  SymPress\StarterTheme\View\TemplateResolver: ~
+  SymPress\StarterTheme\View\TemplateResolver:
+    public: true
   SymPress\StarterTheme\WordPress\Context: ~
 
   SymPress\StarterTheme\View\Renderer:

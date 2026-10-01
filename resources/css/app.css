@@ -1,14 +1,11 @@
 @import "tailwindcss" source(none);
 @import "./site.css";
-@source "../../templates";
+@import "./tailwind-tokens.css";
+@source "../views";
 @source "../../patterns";
 @source "../js";
 
 @theme inline {
-  --color-brand: #3858e9;
-  --color-paper: #f6f7f7;
-  --color-ink: #101517;
-  --color-muted: #50575e;
   --font-sans: var(--font-body);
   --font-serif: var(--font-heading);
 }

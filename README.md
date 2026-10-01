@@ -7,6 +7,13 @@ services and design tokens to your project.
 Sage is the functional reference. This is an original implementation using the
 SymPress kernel and `sympress/twig-bundle`, with no Blade, Acorn or Vite dependency.
 
+## Quickstart
+
+For an existing SymPress site: add this directory as a Composer path repository,
+require `sympress/theme-starter:@dev`, run `npm ci && npm run build` here, then
+activate **SymPress Starter**. PHP QA is independent of an asset build:
+`composer install && composer qa`. Full installation details follow below.
+
 ## Preview the design
 
 Open [the screen design](docs/design/index.html) directly, or run:
@@ -30,8 +37,8 @@ WordPress site title, description, menus and posts; it does not insert demo cont
 - The site's MU plugin must boot `SymPress\Kernel\Kernel\SiteKernel` before the
   theme loads. Use the existing SymPress site's bootstrap. The theme never boots
   a second kernel and is not a standalone WordPress ZIP installation.
-- SymPress dependencies currently track `dev-main`; the checked-in Composer lock
-  records tested versions. A consuming site maintains its own root lock.
+- Production dependencies use stable releases: assets `^1.0.1`, kernel `^1.1`,
+  twig-bundle `^1.0.2`. A consuming site maintains its own root lock.
 
 ## Install in a SymPress site
 
@@ -46,8 +53,8 @@ composer require sympress/theme-starter:@dev
 
 For a source in `packages/theme-starter`, use that path instead. Root Composer
 repository declarations are required; dependency repository declarations do not
-propagate. SymPress starters already allow development versions; other consuming
-projects must explicitly permit the required SymPress `dev-main` packages.
+propagate. `@dev` permits the local theme checkout; its production dependencies
+do not require development stability.
 
 The root Composer project must allow `composer/installers` and provide its normal
 theme installer path, for example:
@@ -103,8 +110,9 @@ the frontend. The editor entry includes scoped content styles and utilities.
 Encore 7 requires an explicit CSS minifier: the production build uses Lightning
 CSS via `configureCssMinimizerPlugin`. JavaScript uses Encore's default minifier.
 
-Encore's relative-public-path warning is intentional: the SymPress asset loader
-resolves file URLs against the active theme directory. Watch rebuilds files; this
+Encore's relative manifest-path warning is intentional: the SymPress asset loader
+resolves entry URLs against the active theme directory. Webpack's runtime public
+path is `auto`, so lazy chunks resolve from the script URL on nested routes. Watch rebuilds files; this
 starter does not implement an HMR/dev-server proxy.
 
 For package-level PHP work (a site's root vendor directory alone does not provide
@@ -128,34 +136,46 @@ at an equivalent seeded **test** site. Never point the fixture setup at a live s
 | --- | --- |
 | Site title, description, front page | WordPress Settings → General / Reading |
 | Navigation | WordPress Appearance → Menus, primary and footer locations |
-| Design tokens and layout | `resources/css/site.css` |
+| Design tokens | `theme.json` → generated `resources/css/tokens.css` |
+| Frontend layout | `resources/css/site.css` |
 | Tailwind entry and theme tokens | `resources/css/app.css` |
 | Editor palette, typography and widths | `theme.json`, `resources/css/editor.css` |
-| HTML layout and reusable partials | `templates/` |
+| HTML layout and reusable partials | `resources/views/` |
 | WordPress view data | `src/WordPress/Context.php` |
 | WordPress setup and assets | `src/WordPress/Theme.php` |
 | Twig selection | `src/View/TemplateResolver.php` |
 | Optional editor pattern | `patterns/editorial-intro.php` |
 
-Keep palette/font changes aligned across CSS and theme.json. Tokens are explicit;
-there is no automatic theme.json generator. Visible theme strings use the
+Edit palette/font values in `theme.json`; every Encore build regenerates the
+shared CSS tokens. Visible theme strings use the
 `sympress-starter` text domain, with German source copy. WordPress dates, standard
-comment fields and admin text follow the site's locale.
+comment fields and admin text follow the site's locale. Run `composer i18n` to
+extract PHP and Twig messages into the POT automatically.
 
 The native WordPress PHP template hierarchy remains intact: plugin template
 overrides can continue to work. `index.php` delegates to Twig when WordPress reaches
-the theme fallback. Twig selection supports `front-page`, `home`, `page-{id}`,
-`page`, `single-{post-type}`, `single`, `singular`, `archive`, `search`, `404` and
-`index`. Add optional templates as needed; no `front-page.html.twig` is shipped,
+the theme fallback. Twig selection observes WordPress's `*_template_hierarchy`
+filters: taxonomy/category/tag, author, date, post-type archives, attachments,
+page slugs/IDs and custom page templates follow core ordering. Add optional
+templates as needed; no `front-page.html.twig` is shipped,
 so a static homepage displays the page's editor content.
 
 Use `sympress_starter/template_candidates` to add specific archive/page templates,
-or `sympress_starter/context` to add view data. Symfony also supports site template
+or `sympress_starter/context` to add view data. Implement `ContextComposer` as a
+service for template-specific data; autoconfiguration tags it automatically.
+Its `supports($template)` receives the resolved `@StarterTheme/*.html.twig` name.
+Put editor-selectable Twig page templates in `resources/views/custom/` and add a
+Twig comment containing a `Template Name: Landing page` header. Native PHP
+templates retain precedence. Symfony also supports site template
 overrides under `templates/bundles/StarterThemeBundle/`. This starter is intended
 to be copied and customized; child-theme discovery is not implemented.
 
 Twig autoescaping stays enabled. The WordPress adapter explicitly marks rendered
-blocks, menus, thumbnails, pagination and native hooks as trusted `Twig\Markup`.
+blocks, menus, thumbnails and pagination through the central `Content::html()`
+boundary. Native hook functions declare Twig `is_safe`. The theme's WordPress
+extension also provides `_x`, `_n`, `sprintf`, `menu` and explicit `esc_html`,
+`esc_attr`, `esc_url` filters. It remains theme-local because its text domain is
+theme-specific; the generic Twig bundle does not gain a WordPress dependency.
 Do not mark user input safe or add generic “call any PHP function” Twig helpers.
 Password-protected posts omit content, excerpts, images and comments until access
 is granted through WordPress.
@@ -171,7 +191,7 @@ Build in CI and deploy `build/` alongside PHP, templates, `style.css`, `theme.js
 patterns and `screenshot.png`. Keep the site's Composer vendor dependencies in its
 normal deployment. Do not ship node_modules, tests, docs, caches or local secrets.
 Build output is ignored in source control and must be included in release artifacts.
-Missing assets show an admin notice and a readable CSS fallback.
+Missing or invalid asset manifests show an admin notice and a readable CSS fallback.
 
 Configure gzip/Brotli on the hosting webserver for HTML, CSS and JavaScript. Give
 content-hashed build assets `Cache-Control: public, max-age=31536000, immutable`;
@@ -196,11 +216,12 @@ add_filter('sympress_starter/inline_styles', '__return_false');
 ```
 
 The theme supplies a basic meta-description fallback: the site tagline for a
-posts homepage, the post/page excerpt (or WordPress' generated excerpt) for
+posts homepage, the stored post/page excerpt (or plain text from stored content) for
 singular pages and a separate posts page, and the term description for taxonomy
 archives. A static front page uses its own excerpt. Maintain these texts in
 WordPress; empty sources do not produce an empty tag. Descriptions are plain text,
-escaped for HTML and limited to 30 words as a theme default.
+escaped for HTML and limited to 30 words as a theme default. Extraction never
+runs content filters, block renderers or shortcode callbacks.
 
 Protected content, previews, search and 404 pages are excluded. The fallback
 stands down when Yoast SEO, Rank Math, All in One SEO, SEOPress or The SEO Framework

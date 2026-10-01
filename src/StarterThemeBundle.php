@@ -10,10 +10,16 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 
 final class StarterThemeBundle extends AbstractBundle
 {
+    public function build(ContainerBuilder $container): void
+    {
+        parent::build($container);
+        $container->registerForAutoconfiguration(View\ContextComposer::class)->addTag('sympress_starter.context_composer');
+    }
+
     public function prependExtension(ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
         $container->prependExtensionConfig('twig', [
-            'paths' => [$this->path() . '/templates' => 'StarterTheme'],
+            'paths' => [$this->path() . '/resources/views' => 'StarterTheme'],
         ]);
     }
 }

@@ -1,0 +1,7 @@
+<form class="search-form" role="search" action="{{ site.url }}" method="get">
+  <label for="{{ search_id|default('site-search') }}">{{ __('Website durchsuchen') }}</label>
+  <div class="search-controls">
+    <input id="{{ search_id|default('site-search') }}" type="search" name="s" value="{{ search_query }}" placeholder="{{ __('Suchbegriff eingeben') }}" required>
+    <button type="submit">{{ __('Suchen') }}</button>
+  </div>
+</form>

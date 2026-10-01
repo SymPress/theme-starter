@@ -38,6 +38,10 @@ try {
     $GLOBALS['wp_query'] = new WP_Query(['page_id' => $page->ID]);
     $GLOBALS['wp_the_query'] = $GLOBALS['wp_query'];
     $resolver = new TemplateResolver($templates);
+    $resolver->register();
+    get_front_page_template();
+    get_page_template();
+    get_singular_template();
     $assert($resolver->resolve($resolver->candidates()) === '@StarterTheme/page.html.twig', 'Static front page must use page content.');
     echo "PASS: compiled container, real Twig renderer, namespace, editor styles, pattern and static homepage.\n";
 } finally {

@@ -28,7 +28,7 @@ $check = static function (bool $condition, string $message) use (&$checks): void
     }
 };
 $loader = new FilesystemLoader();
-$loader->addPath(dirname(__DIR__) . '/templates', 'StarterTheme');
+$loader->addPath(dirname(__DIR__) . '/resources/views', 'StarterTheme');
 $twig = new Environment($loader, ['strict_variables' => true, 'autoescape' => 'html']);
 $twig->addExtension(new WordPressExtension());
 $renderer = new TwigTemplateRenderer($twig);
@@ -68,6 +68,6 @@ $check(str_contains($html, 'Ein Anfang für deine Geschichten.'), 'Empty home ha
 
 $assets = (new SymPress\Assets\Loader\EncoreEntrypointsLoader())
     ->withDirectoryUrl('https://example.test/custom-content/themes/renamed/build/')
-    ->load(dirname(__DIR__) . '/build/entrypoints.json');
-$check(count($assets) >= 3, 'Real Encore output is readable by SymPress Assets.');
+    ->load(__DIR__ . '/Fixtures/build/entrypoints.json');
+$check(count($assets) >= 3, 'Encore fixture is readable by SymPress Assets without a local build.');
 echo "Passed {$checks} assertions.\n";

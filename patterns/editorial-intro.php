@@ -1,9 +1,9 @@
 <?php
 /**
- * Title: Editorial introduction
+ * Title: Redaktionelle Einführung
  * Slug: sympress-starter/editorial-intro
  * Categories: text
- * Description: A spacious introduction using the theme's editorial typography.
+ * Description: Eine großzügige Einführung mit der redaktionellen Typografie des Themes.
  */
 
 if (!defined('ABSPATH')) {

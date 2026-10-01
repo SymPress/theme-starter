@@ -23,9 +23,11 @@ final class Theme
         add_action('wp_head', $this->metaDescription(...), 1);
         add_action(AssetManager::ACTION_SETUP, $this->assets(...));
         add_action('wp_enqueue_scripts', static function (): void {
-            if (is_singular() && comments_open() && get_option('thread_comments')) {
-                wp_enqueue_script('comment-reply');
+            if (!is_singular() || !comments_open() || !get_option('thread_comments')) {
+                return;
             }
+
+            wp_enqueue_script('comment-reply');
         });
         add_action('admin_notices', $this->buildNotice(...));
     }
@@ -35,6 +37,7 @@ final class Theme
         load_theme_textdomain('sympress-starter', get_template_directory() . '/languages');
         add_theme_support('title-tag');
         add_theme_support('post-thumbnails');
+        add_theme_support('custom-logo', ['flex-width' => true, 'flex-height' => true]);
         add_theme_support('automatic-feed-links');
         add_theme_support('responsive-embeds');
         add_theme_support('align-wide');
@@ -42,23 +45,25 @@ final class Theme
         add_theme_support('wp-block-styles');
         add_theme_support('html5', ['search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script']);
         register_nav_menus([
-            'primary' => __('Primary navigation', 'sympress-starter'),
-            'footer' => __('Footer navigation', 'sympress-starter'),
+            'primary' => __('Hauptnavigation', 'sympress-starter'),
+            'footer'  => __('Fußnavigation', 'sympress-starter'),
         ]);
 
         $file = get_template_directory() . '/build/entrypoints.json';
-        if (is_file($file)) {
-            $entries = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
-            foreach ($entries['entrypoints']['sympress-starter-editor']['css'] ?? [] as $css) {
-                add_editor_style('build/' . basename($css));
-            }
+        $entries = BuildManifest::read($file);
+        if ($entries === null) {
+            return;
+        }
+
+        foreach ($entries['sympress-starter-editor']['css'] ?? [] as $css) {
+            add_editor_style('build/' . basename($css));
         }
     }
 
     public function assets(AssetManager $manager): void
     {
         $file = get_template_directory() . '/build/entrypoints.json';
-        if (!is_file($file)) {
+        if (BuildManifest::read($file) === null) {
             // Keep the site readable before the first build. Admins see an action below.
             if (!is_admin()) {
                 wp_enqueue_style('sympress-starter-unbuilt', get_template_directory_uri() . '/resources/css/site.css', [], '0.1.0');
@@ -68,23 +73,31 @@ final class Theme
 
         $loader = (new EncoreEntrypointsLoader())->withDirectoryUrl(get_template_directory_uri() . '/build/');
         foreach ($loader->load($file) as $asset) {
-            if ($asset->handle() === 'sympress-starter-app' || str_starts_with($asset->handle(), 'sympress-starter-app-')) {
-                // A small production stylesheet costs less as part of the first
-                // HTML response. Keep large/dev files and URL-based CSS external.
-                if ($asset instanceof Style && apply_filters('sympress_starter/inline_styles', true)) {
-                    $path = $asset->filePath();
-                    if (preg_match('/\.[a-f0-9]{8,}\.css$/', $path)
-                        && is_readable($path) && filesize($path) <= 16_384
-                    ) {
-                        $css = file_get_contents($path);
-                        if ($css !== false && !preg_match('/\burl\s*\(|@import\b/i', $css)) {
-                            $asset->useInlineFilter();
-                        }
-                    }
-                }
-                $manager->register($asset);
+            if ($asset->handle() !== 'sympress-starter-app' && !str_starts_with($asset->handle(), 'sympress-starter-app-')) {
+                continue;
             }
+
+            // A small production stylesheet costs less as part of the first
+            // HTML response. Keep large/dev files and URL-based CSS external.
+            if ($asset instanceof Style && apply_filters('sympress_starter/inline_styles', true)) {
+                $this->inlineSmallStyle($asset);
+            }
+            $manager->register($asset);
         }
+    }
+
+    private function inlineSmallStyle(Style $asset): void
+    {
+        $path = $asset->filePath();
+        if (!preg_match('/\.[a-f0-9]{8,}\.css$/', $path) || !is_readable($path) || filesize($path) > 16_384) {
+            return;
+        }
+        $css = file_get_contents($path);
+        if ($css === false || preg_match('/\burl\s*\(|@import\b/i', $css)) {
+            return;
+        }
+
+        $asset->useInlineFilter();
     }
 
     public function metaDescription(): void
@@ -115,7 +128,7 @@ final class Theme
             if ($post->post_password !== '') {
                 return;
             }
-            $description = get_the_excerpt($post);
+            $description = Content::excerpt($post, 30);
         } elseif (is_home()) {
             $description = get_bloginfo('description', 'raw');
         } elseif (is_category() || is_tag() || is_tax()) {
@@ -126,18 +139,22 @@ final class Theme
         $description = html_entity_decode(wp_strip_all_tags($description), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $description = trim((string) preg_replace('/\s+/u', ' ', $description));
         $description = wp_trim_words($description, 30, '…');
-        if ($description !== '') {
-            echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
+        if ($description === '') {
+            return;
         }
+
+        echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
     }
 
     public function buildNotice(): void
     {
-        if (current_user_can('edit_theme_options') && !is_file(get_template_directory() . '/build/entrypoints.json')) {
-            echo '<div class="notice notice-warning"><p>' . esc_html__(
-                'SymPress Starter assets are missing. Run npm ci && npm run build in the theme directory.',
-                'sympress-starter',
-            ) . '</p></div>';
+        if (!current_user_can('edit_theme_options') || BuildManifest::read(get_template_directory() . '/build/entrypoints.json') !== null) {
+            return;
         }
+
+        echo '<div class="notice notice-warning"><p>' . esc_html__(
+            'Die SymPress-Starter-Assets fehlen oder sind beschädigt. Bitte npm ci && npm run build im Theme-Verzeichnis ausführen.',
+            'sympress-starter',
+        ) . '</p></div>';
     }
 }

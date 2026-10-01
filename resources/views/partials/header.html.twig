@@ -1,11 +1,12 @@
 <header class="site-header shell">
-  <a class="wordmark" href="{{ site.url }}">{{ site.name }}</a>
+  {% if site.logo|default('') %}{{ site.logo }}{% else %}<a class="wordmark" href="{{ site.url }}">{{ site.name }}</a>{% endif %}
   <button class="menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="primary-navigation">{{ __('Menü') }}</button>
   <nav id="primary-navigation" class="site-nav" aria-label="{{ __('Hauptnavigation') }}">
     {% if primary_menu %}
       {{ primary_menu }}
     {% else %}
-      <ul><li><a href="{{ site.url }}">{{ __('Startseite') }}</a></li><li><a href="{{ site.url }}?s=">{{ __('Suche') }} <span aria-hidden="true">↗</span></a></li></ul>
+      <ul><li><a href="{{ site.url }}">{{ __('Startseite') }}</a></li></ul>
+      {% include '@StarterTheme/partials/search-form.html.twig' with {search_id: 'header-search'} %}
     {% endif %}
   </nav>
 </header>

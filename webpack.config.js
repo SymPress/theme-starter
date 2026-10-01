@@ -1,4 +1,7 @@
 import Encore from '@symfony/webpack-encore';
+import { writeDesignTokens } from './scripts/design-tokens.mjs';
+
+writeDesignTokens();
 
 if (!Encore.isRuntimeEnvironmentConfigured()) {
   Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
@@ -19,4 +22,8 @@ Encore
   .enableVersioning(Encore.isProduction())
   .cleanupOutputBeforeBuild();
 
-export default Encore.getWebpackConfig();
+export default Promise.resolve(Encore.getWebpackConfig()).then((config) => {
+  // Entry manifests stay relative; lazy chunks resolve from the executing script URL.
+  config.output.publicPath = 'auto';
+  return config;
+});

@@ -6,7 +6,7 @@ $root = dirname(__DIR__);
 $iterator = new RecursiveIteratorIterator(new RecursiveCallbackFilterIterator(
     new RecursiveDirectoryIterator($root, FilesystemIterator::SKIP_DOTS),
     static function (SplFileInfo $file): bool {
-        return !$file->isDir() || !in_array($file->getFilename(), ['vendor', 'node_modules', 'public', 'var', '.git'], true);
+        return !$file->isDir() || !in_array($file->getFilename(), ['vendor', 'node_modules', 'public', 'var', '.git', 'phpstan-cache'], true);
     },
 ));
 $count = 0;

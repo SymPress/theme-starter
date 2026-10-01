@@ -135,6 +135,12 @@ The [integration fixture](tests/site/README.md) tests a separate WordPress datab
 `npm run test:browser` requires that fixture running, or `THEME_TEST_URL` pointing
 at an equivalent seeded **test** site. Never point the fixture setup at a live site.
 
+GitHub Actions runs `composer qa`, the translation catalog check, a production
+build, a generated-token consistency check, `test:chunks` in Chromium and dependency
+audits on pull requests and pushes to `main`. Workflow linting uses SymPress's
+shared workflow. The full WordPress/browser fixture remains a separate local
+integration check; the CI chunk test does not boot WordPress.
+
 ## Make it yours
 
 | Concern | Source |
@@ -179,6 +185,11 @@ already have view data can bypass the WordPress main loop explicitly:
 $renderer->render(['partials/post-summary'], ['post' => $postViewData]);
 ```
 
+The `sympress_starter/template_candidates` filter also applies to explicitly
+supplied candidates. Query-based rendering calls core template getters again
+after WordPress's template loader; callbacks on `{type}_template` should tolerate
+multiple calls. Explicit candidates avoid that second hierarchy lookup.
+
 Card excerpts use native `get_the_excerpt`, `excerpt_length` and `excerpt_more`
 filters. Public reusable blocks are expanded through WordPress's excerpt block
 allowlist with cycle/depth protection. A custom dynamic block must be opted in
@@ -220,7 +231,9 @@ Build output is ignored in source control and must be included in release artifa
 Missing or invalid asset manifests show an admin notice and a readable CSS fallback.
 The frontend entry is validated independently of the optional editor entry.
 Build assets may use relative subdirectories such as `js/` and `css/`; paths
-outside `build/` are rejected. A broken editor entry does not disable frontend
+outside `build/` are rejected, including symlinks resolving outside that directory.
+Deploy actual files within `build/` or use symlinks whose targets remain inside it.
+A broken editor entry does not disable frontend
 assets. Script-only frontend entries are supported.
 
 Configure gzip/Brotli on the hosting webserver for HTML, CSS and JavaScript. Give

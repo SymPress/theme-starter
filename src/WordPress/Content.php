@@ -19,7 +19,58 @@ final class Content
         return new Markup($value, 'UTF-8');
     }
 
-    public static function excerpt(\WP_Post $post, int $words = 55): string
+    public static function excerpt(\WP_Post $post): string
+    {
+        if ($post->post_password !== '') {
+            return '';
+        }
+        $seen = [];
+        $allowReusable = static fn (array $allowed): array => array_values(array_unique([...$allowed, 'core/block']));
+        $renderReusable = static function (?string $rendered, array $block) use (&$seen): ?string {
+            return self::reusableExcerpt($rendered, $block, $seen);
+        };
+        add_filter('excerpt_allowed_blocks', $allowReusable);
+        add_filter('pre_render_block', $renderReusable, 10, 2);
+        try {
+            return self::text(get_the_excerpt($post));
+        } finally {
+            remove_filter('excerpt_allowed_blocks', $allowReusable);
+            remove_filter('pre_render_block', $renderReusable, 10);
+        }
+    }
+
+    /**
+     * Expand reusable text through the same block allowlist as ordinary excerpts.
+     * Never run an embedded query/form block just to construct a card excerpt.
+     *
+     * @param array{blockName?: ?string, attrs?: array<string, mixed>} $block
+     * @param array<int, true> $seen
+     */
+    private static function reusableExcerpt(?string $rendered, array $block, array &$seen): ?string
+    {
+        if ($rendered !== null || ($block['blockName'] ?? '') !== 'core/block') {
+            return $rendered;
+        }
+        $reference = (int) ($block['attrs']['ref'] ?? 0);
+        if ($reference === 0 || isset($seen[$reference]) || count($seen) >= 20) {
+            return '';
+        }
+        $reusable = get_post($reference);
+        if (
+            !$reusable instanceof \WP_Post || $reusable->post_type !== 'wp_block'
+            || $reusable->post_status !== 'publish' || $reusable->post_password !== ''
+        ) {
+            return '';
+        }
+        $seen[$reference] = true;
+        try {
+            return excerpt_remove_blocks(strip_shortcodes($reusable->post_content));
+        } finally {
+            unset($seen[$reference]);
+        }
+    }
+
+    public static function plainExcerpt(\WP_Post $post, int $words = 30): string
     {
         if ($post->post_password !== '') {
             return '';

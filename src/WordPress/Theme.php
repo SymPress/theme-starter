@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace SymPress\StarterTheme\WordPress;
 
 use SymPress\Assets\AssetManager;
-use SymPress\Assets\Loader\EncoreEntrypointsLoader;
 use SymPress\Assets\Style;
 
 final class Theme
@@ -56,14 +55,15 @@ final class Theme
         }
 
         foreach ($entries['sympress-starter-editor']['css'] ?? [] as $css) {
-            add_editor_style('build/' . basename($css));
+            add_editor_style('build/' . preg_replace('~^\./~', '', $css));
         }
     }
 
     public function assets(AssetManager $manager): void
     {
         $file = get_template_directory() . '/build/entrypoints.json';
-        if (BuildManifest::read($file) === null) {
+        $entries = BuildManifest::read($file);
+        if (!isset($entries['sympress-starter-app'])) {
             // Keep the site readable before the first build. Admins see an action below.
             if (!is_admin()) {
                 wp_enqueue_style('sympress-starter-unbuilt', get_template_directory_uri() . '/resources/css/site.css', [], '0.1.0');
@@ -71,8 +71,8 @@ final class Theme
             return;
         }
 
-        $loader = (new EncoreEntrypointsLoader())->withDirectoryUrl(get_template_directory_uri() . '/build/');
-        foreach ($loader->load($file) as $asset) {
+        $loader = (new AssetLoader())->withDirectoryUrl(get_template_directory_uri() . '/build/');
+        foreach ($loader->fromEntries($entries, $file) as $asset) {
             if ($asset->handle() !== 'sympress-starter-app' && !str_starts_with($asset->handle(), 'sympress-starter-app-')) {
                 continue;
             }
@@ -128,7 +128,7 @@ final class Theme
             if ($post->post_password !== '') {
                 return;
             }
-            $description = Content::excerpt($post, 30);
+            $description = Content::plainExcerpt($post, 30);
         } elseif (is_home()) {
             $description = get_bloginfo('description', 'raw');
         } elseif (is_category() || is_tag() || is_tax()) {
@@ -148,7 +148,8 @@ final class Theme
 
     public function buildNotice(): void
     {
-        if (!current_user_can('edit_theme_options') || BuildManifest::read(get_template_directory() . '/build/entrypoints.json') !== null) {
+        $entries = BuildManifest::read(get_template_directory() . '/build/entrypoints.json');
+        if (!current_user_can('edit_theme_options') || isset($entries['sympress-starter-app'])) {
             return;
         }
 

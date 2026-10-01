@@ -32,10 +32,10 @@
     }
   },
   "scripts": {
-    "test": ["qa tests", "@php tests/run.php"],
-    "cs": "qa cs",
-    "cs:fix": "qa cs:fix",
-    "static-analysis": "qa static-analysis",
+    "test": ["@php vendor/bin/qa tests", "@php tests/run.php"],
+    "cs": "@php vendor/bin/qa cs",
+    "cs:fix": "@php vendor/bin/qa cs:fix",
+    "static-analysis": "@php vendor/bin/qa static-analysis",
     "i18n": "@php scripts/extract-translations.php",
     "lint:twig": "@php scripts/lint-twig.php",
     "lint:php": "@php scripts/lint-php.php",

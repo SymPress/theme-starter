@@ -1,5 +1,5 @@
-{% extends '@StarterTheme/layouts/base.html.twig' %}
+{% extends '@theme/layouts/base.html.twig' %}
 {% block content %}
-  <header class="page-intro"><p class="eyebrow">{{ __('Fehler 404') }}</p><h1>{{ title }}</h1><p class="intro-copy">{{ __('Vielleicht wurde sie verschoben. Über die Suche findest du einen neuen Weg.') }}</p></header>
-  <div class="max-w-xl">{% include '@StarterTheme/partials/search-form.html.twig' %}<a class="text-link mt-6" href="{{ site.url }}">{{ __('Zur Startseite') }} <span aria-hidden="true">↗</span></a></div>
+  <header class="page-intro"><p class="eyebrow">{{ __('Fehler 404') }}</p><h1>{{ __('Diese Seite fehlt.') }}</h1><p class="intro-copy">{{ __('Vielleicht wurde sie verschoben. Über die Suche findest du einen neuen Weg.') }}</p></header>
+  <div class="max-w-xl">{% include '@theme/partials/search-form.html.twig' %}<a class="text-link mt-6" href="{{ site.url }}">{{ __('Zur Startseite') }} <span aria-hidden="true">↗</span></a></div>
 {% endblock %}

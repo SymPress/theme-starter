@@ -1,5 +1,12 @@
 # Disposable WordPress integration fixture
 
+CI runs this fixture with the shared `ddev-playwright` workflow. On a fresh
+checkout: `ddev start`, `ddev exec bash tests/site/setup-ci.sh`,
+`ddev exec composer --working-dir=tests/site compile-assets --mode production --no-dev --packages sympress/theme-starter`,
+then `ddev exec bash tests/site/run-ci.sh` and
+`THEME_TEST_URL=http://sympress-theme.ddev.site npm run test:browser`.
+The fixture installs released Twig/Assets versions, never sibling aliases.
+
 This fixture uses its own MariaDB database, theme source and Composer vendor tree.
 No existing SymPress starter/demo configuration is changed. The seed script checks
 both `WP_ENVIRONMENT_TYPE=local` and database name `theme_test` before resetting
@@ -33,6 +40,7 @@ and `public/wp-content/mu-plugins/`, and create these links:
 
 ```sh
 ln -s ../wp-config.php public/wp-config.php
+ln -s ../front-controller.php public/index.php
 ln -s ../../../mu-plugin.php public/wp-content/mu-plugins/theme-test.php
 ```
 
@@ -53,6 +61,8 @@ podman exec sympress-theme-test-web php8.5 /usr/local/bin/wp-cli \
   --allow-root --path=public/wp eval-file meta-description-check.php
 podman exec sympress-theme-test-web php8.5 /usr/local/bin/wp-cli \
   --allow-root --path=public/wp eval-file review-regressions.php
+podman exec sympress-theme-test-web php8.5 /usr/local/bin/wp-cli \
+  --allow-root --path=public/wp eval-file twig-integration-check.php
 ```
 
 Build theme assets, then run `npm run test:browser` from the theme root. The router

@@ -7,16 +7,16 @@
     "php": "^8.5",
     "composer/installers": "^2.3",
     "symfony/dependency-injection": "^8.1",
-    "sympress/assets": "^1.1",
+    "sympress/assets": "^1.2",
     "sympress/kernel": "^1.1",
-    "sympress/twig-bundle": "^1.0.2",
+    "sympress/twig-bundle": "^1.1",
     "twig/twig": "^3.22"
   },
   "require-dev": { "brain/monkey": "^2.6", "nikic/php-parser": "^5.9", "sympress/qa": "^0.1.1" },
   "autoload": { "psr-4": { "SymPress\\StarterTheme\\": "src/" } },
   "autoload-dev": { "psr-4": { "SymPress\\StarterTheme\\Tests\\": "tests/" } },
   "extra": {
-    "branch-alias": { "dev-main": "0.1.x-dev" },
+    "branch-alias": { "dev-main": "0.2.x-dev" },
     "installer-name": "sympress-starter",
     "kernel": {
       "bundle": "SymPress\\StarterTheme\\StarterThemeBundle",

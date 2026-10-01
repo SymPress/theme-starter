@@ -5,15 +5,19 @@
   "license": "GPL-2.0-or-later",
   "require": {
     "roots/wordpress": "^7.1.1",
+    "sympress/asset-compiler": "^1.0",
     "sympress/theme-starter": "@dev"
   },
-  "repositories": [{ "type": "path", "url": "../..", "options": { "symlink": true } }],
+  "repositories": [
+    { "type": "path", "url": "../..", "options": { "symlink": true } }
+  ],
   "extra": {
+    "sympress.asset-compiler": { "auto-discover": false, "packages": { "sympress/theme-starter": true } },
     "wordpress-install-dir": "public/wp",
     "installer-paths": { "public/wp-content/themes/sympress-starter/": ["sympress/theme-starter"] }
   },
   "config": {
-    "allow-plugins": { "composer/installers": true, "roots/wordpress-core-installer": true }
+    "allow-plugins": { "composer/installers": true, "roots/wordpress-core-installer": true, "sympress/asset-compiler": true }
   },
   "minimum-stability": "dev",
   "prefer-stable": true

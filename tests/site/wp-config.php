@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 // Disposable local test database only. No production settings or credentials.
 define('DB_NAME', 'theme_test');
-define('DB_USER', 'theme_test');
-define('DB_PASSWORD', 'local-theme-tests-only');
-define('DB_HOST', '127.0.0.1:19367');
+define('DB_USER', getenv('THEME_TEST_DB_USER') ?: 'theme_test');
+define('DB_PASSWORD', getenv('THEME_TEST_DB_PASSWORD') ?: 'local-theme-tests-only');
+define('DB_HOST', getenv('THEME_TEST_DB_HOST') ?: '127.0.0.1:19367');
 define('DB_CHARSET', 'utf8mb4');
 define('DB_COLLATE', '');
 $table_prefix = getenv('THEME_TEST_TABLE_PREFIX') ?: 'theme_';

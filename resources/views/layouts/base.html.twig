@@ -1,20 +1,11 @@
-<!doctype html>
-<html {{ language_attributes() }}>
-<head>
-  <meta charset="{{ site.charset }}">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  {{ wp_head() }}
-</head>
-<body {{ body_class() }}>
-  {{ wp_body_open() }}
+{% extends '@wordpress/document.html.twig' %}
+{% block body %}
   <div class="min-h-dvh flex flex-col">
     <a class="skip-link" href="#content">{{ __('Zum Inhalt') }}</a>
-    {% include '@StarterTheme/partials/header.html.twig' %}
+    {% include '@theme/partials/header.html.twig' %}
     <main id="content" class="shell grow" tabindex="-1">
       {% block content %}{% endblock %}
     </main>
-    {% include '@StarterTheme/partials/footer.html.twig' %}
+    {% include '@theme/partials/footer.html.twig' %}
   </div>
-  {{ wp_footer() }}
-</body>
-</html>
+{% endblock %}

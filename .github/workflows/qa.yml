@@ -14,6 +14,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  wordpress:
+    uses: sympress/workflows/.github/workflows/ddev-playwright.yml@v1
+    with:
+      php_version: '8.5'
+      node_version: '24'
+      allow_custom_commands: true
+      setup_command: ddev exec bash tests/site/setup-ci.sh
+      playwright_install_command: ddev exec composer --working-dir=tests/site compile-assets --mode production --no-dev --packages sympress/theme-starter && npm ci && npx playwright install --with-deps chromium
+      playwright_run_command: ddev exec bash tests/site/run-ci.sh && THEME_TEST_URL=http://sympress-theme.ddev.site npm run test:browser
+
   workflows:
     uses: sympress/workflows/.github/workflows/lint-workflows.yml@v1
 
@@ -62,6 +72,8 @@ jobs:
         run: npx playwright install --only-shell chromium
       - name: Production build
         run: npm run build
+      - name: Check native preset aliases
+        run: node tests/assets/check-presets.mjs
       - name: Test lazy chunks on nested routes
         run: npm run test:chunks
       - name: Audit JavaScript dependencies

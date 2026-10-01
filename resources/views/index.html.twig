@@ -1,15 +1,15 @@
-{% extends '@StarterTheme/layouts/base.html.twig' %}
+{% extends '@theme/layouts/base.html.twig' %}
 {% block content %}
   <header class="page-intro">
     <p class="eyebrow">{{ __('Journal') }}</p>
     <h1>{{ title }}</h1>
     {% if description %}<div class="intro-copy">{{ description }}</div>{% endif %}
   </header>
-  {% if posts %}
+  {% if posts|length %}
     <div class="post-grid">
-      {% for post in posts %}{% include '@StarterTheme/partials/post-summary.html.twig' %}{% endfor %}
+      {% for post in posts %}{% include '@theme/partials/post-summary.html.twig' %}{% endfor %}
     </div>
-    {{ pagination }}
+    {% include '@theme/partials/pagination.html.twig' %}
   {% else %}
     <div class="empty-state"><h2>{{ __('Hier ist noch Platz für Neues.') }}</h2><p>{{ __('Sobald Beiträge veröffentlicht werden, findest du sie hier.') }}</p></div>
   {% endif %}

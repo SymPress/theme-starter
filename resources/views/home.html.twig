@@ -1,20 +1,21 @@
-{% extends '@StarterTheme/layouts/base.html.twig' %}
+{% extends '@theme/layouts/base.html.twig' %}
 {% block content %}
   <header class="page-intro">
     <p class="eyebrow">{{ __('Journal') }}</p>
     <h1>{{ title }}</h1>
     {% if site.description %}<p class="intro-copy">{{ site.description }}</p>{% endif %}
   </header>
-  {% if posts %}
-    {% set post = posts|first %}
+  {% if posts|length %}
+    {% for post in posts %}
+    {% if loop.first %}
     <section class="featured-layout" aria-labelledby="featured-title">
-      {% if post.image %}
-        <a href="{{ post.url }}" tabindex="-1" aria-hidden="true">{{ post.image }}</a>
+      {% if post.thumbnail('large', {class: 'featured-image'}) %}
+        <a href="{{ post.url }}" tabindex="-1" aria-hidden="true">{{ post.thumbnail('large', {class: 'featured-image'}) }}</a>
       {% else %}
-        <a class="type-cover" href="{{ post.url }}" tabindex="-1" aria-hidden="true"><span class="cover-label">{{ site.name }}</span><span class="cover-type">Aa<span class="cover-period">.</span></span><span class="cover-bottom">{{ post.category }}<span>↗</span></span></a>
+        <a class="type-cover" href="{{ post.url }}" tabindex="-1" aria-hidden="true"><span class="cover-label">{{ site.name }}</span><span class="cover-type">Aa<span class="cover-period">.</span></span><span class="cover-bottom">{{ post.categories|first.name|default('') }}<span>↗</span></span></a>
       {% endif %}
       <article class="featured-copy">
-        {% include '@StarterTheme/partials/post-meta.html.twig' %}
+        {% include '@theme/partials/post-meta.html.twig' %}
         <h2 id="featured-title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
         <p>{{ post.excerpt }}</p>
         <a class="text-link" href="{{ post.url }}">{{ __('Beitrag lesen') }}<span class="screen-reader-text">: {{ post.title }}</span><span aria-hidden="true">↗</span></a>
@@ -23,10 +24,14 @@
     {% if posts|length > 1 %}
       <section class="journal-section" aria-labelledby="more-posts">
         <div class="section-heading"><h2 id="more-posts">{{ __('Weitere Gedanken') }}</h2><span class="muted">{{ __('Zum Weiterlesen') }}</span></div>
-        <div class="post-grid">{% for post in posts|slice(1) %}{% include '@StarterTheme/partials/post-summary.html.twig' %}{% endfor %}</div>
-      </section>
+        <div class="post-grid">
     {% endif %}
-    {{ pagination }}
+    {% else %}
+      {% include '@theme/partials/post-summary.html.twig' %}
+    {% endif %}
+    {% if loop.last and posts|length > 1 %}</div></section>{% endif %}
+    {% endfor %}
+    {% include '@theme/partials/pagination.html.twig' %}
   {% else %}
     <div class="empty-state"><h2>{{ __('Ein Anfang für deine Geschichten.') }}</h2><p>{{ __('Hier erscheinen deine veröffentlichten Beiträge.') }}</p></div>
   {% endif %}

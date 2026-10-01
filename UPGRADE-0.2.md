@@ -1,6 +1,6 @@
 # Upgrade from 0.1.x to 0.2 / 1.0
 
-Update the site's lock with Twig Bundle >=1.1.0 and Assets >=1.2.0, then rebuild
+Update the site's lock with Twig Bundle >=1.1.1 and Assets >=1.2.0, then rebuild
 assets and the production container. Remove development path repositories for
 those dependencies. The theme no longer implements generic WordPress rendering.
 

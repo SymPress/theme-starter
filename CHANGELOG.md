@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 — 2026-10-01
+
+- Require Twig Bundle 1.1.1 or newer and lock the HTML-filter security fix.
+- Correct indentation in the fallback entry point.
+
 ## 1.0.0 — 2026-10-01
 
 - Document the GitHub VCS repository required to install the theme's stable tags.

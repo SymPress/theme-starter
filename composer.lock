@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b8ea22c30ef3bb12e7ba92317401b54c",
+    "content-hash": "8c7efb0fcc0e5161438288cbfcc9fa7e",
     "packages": [
         {
             "name": "composer/installers",
@@ -3342,16 +3342,16 @@
         },
         {
             "name": "sympress/twig-bundle",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SymPress/twig-bundle.git",
-                "reference": "fe0fce72e25122552bee8661cbe49f464d84783c"
+                "reference": "3afd73d35a311ca98964f9035657999baf26e3e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SymPress/twig-bundle/zipball/fe0fce72e25122552bee8661cbe49f464d84783c",
-                "reference": "fe0fce72e25122552bee8661cbe49f464d84783c",
+                "url": "https://api.github.com/repos/SymPress/twig-bundle/zipball/3afd73d35a311ca98964f9035657999baf26e3e3",
+                "reference": "3afd73d35a311ca98964f9035657999baf26e3e3",
                 "shasum": ""
             },
             "require": {
@@ -3413,9 +3413,9 @@
             "description": "Twig integration bundle for SymPress with Symfony TwigBundle feature parity.",
             "support": {
                 "issues": "https://github.com/SymPress/twig-bundle/issues",
-                "source": "https://github.com/SymPress/twig-bundle/tree/1.1.0"
+                "source": "https://github.com/SymPress/twig-bundle/tree/1.1.1"
             },
-            "time": "2026-10-01T17:35:45+00:00"
+            "time": "2026-10-01T19:10:23+00:00"
         },
         {
             "name": "twig/twig",

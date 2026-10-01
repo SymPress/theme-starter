@@ -1,0 +1,6 @@
+<footer class="site-footer shell">
+  <a class="wordmark" href="{{ site.url }}">{{ site.name }}</a>
+  {% if footer_menu %}<nav class="site-nav" aria-label="{{ __('Footernavigation') }}">{{ footer_menu }}</nav>{% endif %}
+  <p>© {{ year }} {{ site.name }}</p>
+  <a href="#content">{{ __('Nach oben') }} <span aria-hidden="true">↑</span></a>
+</footer>

@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  SymPress\StarterTheme\View\WordPressExtension:
+    tags: [twig.extension]
+
+  SymPress\StarterTheme\View\TemplateResolver: ~
+  SymPress\StarterTheme\WordPress\Context: ~
+
+  SymPress\StarterTheme\View\Renderer:
+    public: true
+
+  SymPress\StarterTheme\WordPress\Theme:
+    public: true

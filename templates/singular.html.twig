@@ -1,0 +1,15 @@
+{% extends '@StarterTheme/layouts/base.html.twig' %}
+{% block content %}
+  {% for post in posts %}
+    <article class="entry" id="post-{{ post.id }}">
+      <header>
+        {% if post.show_meta %}{% include '@StarterTheme/partials/post-meta.html.twig' %}{% endif %}
+        <h1>{{ post.title }}</h1>
+        {% if post.image %}<div class="mb-8">{{ post.image }}</div>{% endif %}
+      </header>
+      <div class="entry-content">{{ post.content }}</div>
+      {{ post.pages }}
+      {% if show_comments %}{{ comments() }}{% endif %}
+    </article>
+  {% endfor %}
+{% endblock %}

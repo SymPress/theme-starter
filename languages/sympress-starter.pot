@@ -1,0 +1,122 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: SymPress Starter 0.1.0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Domain: sympress-starter\n"
+
+msgid "Beitrag lesen"
+msgstr ""
+
+msgid "Die Kommentare sind geschlossen."
+msgstr ""
+
+msgid "Diese Seite fehlt."
+msgstr ""
+
+msgid "Dieser Beitrag ist passwortgeschützt."
+msgstr ""
+
+msgid "Ein Anfang für deine Geschichten."
+msgstr ""
+
+msgid "Ein Anfang. Deine Handschrift."
+msgstr ""
+
+msgid "Fehler 404"
+msgstr ""
+
+msgid "Footer navigation"
+msgstr ""
+
+msgid "Footernavigation"
+msgstr ""
+
+msgid "Hauptnavigation"
+msgstr ""
+
+msgid "Hier beginnt deine Geschichte. Ersetze diesen Text durch deine eigene Einführung."
+msgstr ""
+
+msgid "Hier erscheinen deine veröffentlichten Beiträge."
+msgstr ""
+
+msgid "Hier ist noch Platz für Neues."
+msgstr ""
+
+msgid "Im Gespräch"
+msgstr ""
+
+msgid "Journal"
+msgstr ""
+
+msgid "Keine passenden Beiträge gefunden."
+msgstr ""
+
+msgid "Menü"
+msgstr ""
+
+msgid "Nach oben"
+msgstr ""
+
+msgid "Primary navigation"
+msgstr ""
+
+msgid "Sobald Beiträge veröffentlicht werden, findest du sie hier."
+msgstr ""
+
+msgid "Startseite"
+msgstr ""
+
+msgid "Suchbegriff eingeben"
+msgstr ""
+
+msgid "Suche"
+msgstr ""
+
+#, php-format
+msgid "Suche nach „%s“"
+msgstr ""
+
+msgid "Suchen"
+msgstr ""
+
+msgid "SymPress Starter assets are missing. Run npm ci && npm run build in the theme directory."
+msgstr ""
+
+msgid "SymPress Starter requires the site Composer autoloader, a booted SymPress kernel and sympress/twig-bundle. See the theme README for setup."
+msgstr ""
+
+msgid "The theme is not configured. Please contact the site administrator."
+msgstr ""
+
+msgid "Theme configuration required"
+msgstr ""
+
+msgid "Versuche einen anderen Suchbegriff oder kehre zur Startseite zurück."
+msgstr ""
+
+msgid "Vielleicht wurde sie verschoben. Über die Suche findest du einen neuen Weg."
+msgstr ""
+
+msgid "Website durchsuchen"
+msgstr ""
+
+msgid "Weiter"
+msgstr ""
+
+msgid "Weitere Gedanken"
+msgstr ""
+
+msgid "Zum Inhalt"
+msgstr ""
+
+msgid "Zum Weiterlesen"
+msgstr ""
+
+msgid "Zur Startseite"
+msgstr ""
+
+msgid "Zurück"
+msgstr ""

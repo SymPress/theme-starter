@@ -1,0 +1,11 @@
+{% extends '@StarterTheme/layouts/base.html.twig' %}
+{% block content %}
+  <header class="page-intro"><p class="eyebrow">{{ __('Suche') }}</p><h1>{{ title }}</h1></header>
+  <div class="max-w-xl mb-12">{% include '@StarterTheme/partials/search-form.html.twig' %}</div>
+  {% if posts %}
+    <div class="post-grid">{% for post in posts %}{% include '@StarterTheme/partials/post-summary.html.twig' %}{% endfor %}</div>
+    {{ pagination }}
+  {% else %}
+    <div class="empty-state"><h2>{{ __('Keine passenden Beiträge gefunden.') }}</h2><p>{{ __('Versuche einen anderen Suchbegriff oder kehre zur Startseite zurück.') }}</p><a class="text-link" href="{{ site.url }}">{{ __('Zur Startseite') }} <span aria-hidden="true">↗</span></a></div>
+  {% endif %}
+{% endblock %}

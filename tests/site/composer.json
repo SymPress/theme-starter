@@ -1,0 +1,20 @@
+{
+  "name": "sympress/theme-starter-test-site",
+  "description": "Disposable integration fixture for the SymPress starter theme.",
+  "type": "project",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "roots/wordpress": "^7.1.1",
+    "sympress/theme-starter": "@dev"
+  },
+  "repositories": [{ "type": "path", "url": "../..", "options": { "symlink": true } }],
+  "extra": {
+    "wordpress-install-dir": "public/wp",
+    "installer-paths": { "public/wp-content/themes/sympress-starter/": ["sympress/theme-starter"] }
+  },
+  "config": {
+    "allow-plugins": { "composer/installers": true, "roots/wordpress-core-installer": true }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

@@ -1,0 +1,38 @@
+{
+  "name": "sympress/theme-starter",
+  "description": "An editorial WordPress starter theme with SymPress Twig, Tailwind CSS and Webpack Encore.",
+  "type": "wordpress-theme",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": "^8.5",
+    "composer/installers": "^2.3",
+    "sympress/assets": "dev-main",
+    "sympress/kernel": "dev-main",
+    "sympress/twig-bundle": "dev-main"
+  },
+  "autoload": { "psr-4": { "SymPress\\StarterTheme\\": "src/" } },
+  "extra": {
+    "installer-name": "sympress-starter",
+    "kernel": {
+      "bundle": "SymPress\\StarterTheme\\StarterThemeBundle",
+      "entry": "sympress-starter"
+    },
+    "sympress": {
+      "asset-compiler": {
+        "script": { "$mode": { "$default": "build", "production": "build:production" } },
+        "dependencies": "install",
+        "package-manager": "npm",
+        "src-paths": ["resources", "templates", "patterns", "webpack.config.js", "postcss.config.js", "package.json", "package-lock.json"]
+      }
+    }
+  },
+  "scripts": {
+    "test": "@php tests/run.php",
+    "lint:twig": "@php scripts/lint-twig.php",
+    "lint:php": "@php scripts/lint-php.php",
+    "qa": ["@composer validate --strict", "@lint:php", "@lint:twig", "@test"]
+  },
+  "config": { "sort-packages": true, "allow-plugins": { "composer/installers": true } },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

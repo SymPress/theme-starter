@@ -1,0 +1,4 @@
+<p class="post-meta">
+  {% if post.category %}<span>{{ post.category }}</span><span aria-hidden="true">/</span>{% endif %}
+  <time datetime="{{ post.date_iso }}">{{ post.date }}</time>
+</p>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SymPress\StarterTheme\WordPress;
 
 use SymPress\Assets\AssetManager;
+use SymPress\Assets\Loader\EncoreEntrypointsLoader;
 use SymPress\Assets\Style;
 
 final class Theme
@@ -66,13 +67,13 @@ final class Theme
         if (!isset($entries['sympress-starter-app'])) {
             // Keep the site readable before the first build. Admins see an action below.
             if (!is_admin()) {
-                wp_enqueue_style('sympress-starter-unbuilt', get_template_directory_uri() . '/resources/css/site.css', [], '0.1.0');
+                wp_enqueue_style('sympress-starter-unbuilt', get_template_directory_uri() . '/resources/css/site.css', [], '0.1.1');
             }
             return;
         }
 
-        $loader = (new AssetLoader())->withDirectoryUrl(get_template_directory_uri() . '/build/');
-        foreach ($loader->fromEntries($entries, $file) as $asset) {
+        $loader = (new EncoreEntrypointsLoader())->withDirectoryUrl(get_template_directory_uri() . '/build/');
+        foreach ($loader->loadFromArray(['entrypoints' => $entries], $file) as $asset) {
             if ($asset->handle() !== 'sympress-starter-app' && !str_starts_with($asset->handle(), 'sympress-starter-app-')) {
                 continue;
             }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6fa8db844d368c134a62a5d6725e7d16",
+    "content-hash": "e535afea7aa2c79367e08833edc45133",
     "packages": [
         {
             "name": "composer/installers",
@@ -3107,16 +3107,16 @@
         },
         {
             "name": "sympress/assets",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SymPress/assets.git",
-                "reference": "02838b5a35d9606ecd6b1c4e0afc8894d2c3a06a"
+                "reference": "0e95b88384ab0eff29a0d4fbaa5f45d6b89b26ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SymPress/assets/zipball/02838b5a35d9606ecd6b1c4e0afc8894d2c3a06a",
-                "reference": "02838b5a35d9606ecd6b1c4e0afc8894d2c3a06a",
+                "url": "https://api.github.com/repos/SymPress/assets/zipball/0e95b88384ab0eff29a0d4fbaa5f45d6b89b26ff",
+                "reference": "0e95b88384ab0eff29a0d4fbaa5f45d6b89b26ff",
                 "shasum": ""
             },
             "require": {
@@ -3178,9 +3178,9 @@
             "description": "WordPress asset management library with optional Symfony-kernel integration.",
             "support": {
                 "issues": "https://github.com/SymPress/assets/issues",
-                "source": "https://github.com/SymPress/assets/tree/1.0.1"
+                "source": "https://github.com/SymPress/assets/tree/1.1.0"
             },
-            "time": "2026-06-19T02:08:28+00:00"
+            "time": "2026-10-01T15:33:11+00:00"
         },
         {
             "name": "sympress/framework-bundle",

@@ -64,7 +64,7 @@ final class Content
         }
         $seen[$reference] = true;
         try {
-            return excerpt_remove_blocks($reusable->post_content);
+            return excerpt_remove_blocks(strip_shortcodes($reusable->post_content));
         } finally {
             unset($seen[$reference]);
         }

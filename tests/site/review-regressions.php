@@ -78,6 +78,12 @@ try {
     $temporaryPosts[] = $reusable;
     wp_update_post(['ID' => $excerptPost, 'post_content' => '<!-- wp:block {"ref":' . $reusable . '} /-->']);
     $assert(str_contains(Content::excerpt(get_post($excerptPost)), 'Reusable excerpt content'), 'Reusable blocks contribute native excerpt text.');
+    $shortcodesBeforeExcerpt = $shortcodes;
+    wp_update_post(['ID' => $reusable, 'post_content' => '<!-- wp:paragraph --><p>[review_count] Reusable excerpt content</p><!-- /wp:paragraph -->']);
+    $reusableExcerpt = Content::excerpt(get_post($excerptPost));
+    $assert(str_contains($reusableExcerpt, 'Reusable excerpt content'), 'Reusable text survives shortcode removal.');
+    $assert($shortcodes === $shortcodesBeforeExcerpt, 'Reusable excerpts strip shortcodes before the native content filters run.');
+    $assert(!str_contains($reusableExcerpt, '[review_count]'), 'Shortcode markers are absent from reusable excerpts.');
     wp_update_post(['ID' => $reusable, 'post_content' => '<!-- wp:block {"ref":' . $reusable . '} /--><!-- wp:paragraph --><p>Safe cyclic ending</p><!-- /wp:paragraph -->']);
     $assert(str_contains(Content::excerpt(get_post($excerptPost)), 'Safe cyclic ending'), 'Cyclic reusable references terminate and preserve remaining text.');
     wp_update_post(['ID' => $reusable, 'post_status' => 'private', 'post_content' => '<!-- wp:paragraph --><p>PRIVATE_PATTERN_SECRET</p><!-- /wp:paragraph -->']);

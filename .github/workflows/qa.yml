@@ -59,7 +59,7 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
       - name: Install Chromium for the chunk test
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --only-shell chromium
       - name: Production build
         run: npm run build
       - name: Check generated design tokens

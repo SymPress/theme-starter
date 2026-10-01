@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 for (const width of [320, 768, 1024, 1440]) {
-  test(`home renders without overflow or accessibility violations at ${width}px`, async ({ page }) => {
+  test(`home renders without overflow or accessibility violations at ${width}px`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width, height: 1000 });
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
@@ -25,7 +25,7 @@ for (const width of [320, 768, 1024, 1440]) {
     const accessibility = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
     expect(accessibility.violations).toEqual([]);
     if (width === 1440 || width === 320) {
-      await page.screenshot({ path: `docs/design/theme-${width}.png`, fullPage: true });
+      await page.screenshot({ path: testInfo.outputPath(`theme-${width}.png`), fullPage: true });
     }
   });
 }
@@ -119,7 +119,7 @@ test('missing page returns a real 404 and usable search', async ({ page }) => {
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
 
-test('block editor loads scoped theme styles inside its canvas', async ({ page }) => {
+test('block editor loads scoped theme styles inside its canvas', async ({ page }, testInfo) => {
   await page.goto('/wp/wp-login.php');
   await page.locator('#user_login').fill('theme-test');
   await page.locator('#user_pass').fill('local-fixture-only-no-reuse');
@@ -136,5 +136,5 @@ test('block editor loads scoped theme styles inside its canvas', async ({ page }
     }
   });
   await expect(page.getByRole('dialog')).toHaveCount(0);
-  await page.screenshot({ path: 'docs/design/editor.png', fullPage: true });
+  await page.screenshot({ path: testInfo.outputPath('editor.png'), fullPage: true });
 });

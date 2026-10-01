@@ -68,7 +68,7 @@ final class ThemeTest extends WordPressTestCase
         Functions\when('get_template_directory')->justReturn($directory);
         Functions\when('get_template_directory_uri')->justReturn('https://example.test/theme');
         Functions\when('is_admin')->justReturn(false);
-        Functions\expect('wp_enqueue_style')->times(5)->with('sympress-starter-unbuilt', 'https://example.test/theme/resources/css/site.css', [], '0.2.0');
+        Functions\expect('wp_enqueue_style')->times(5)->with('sympress-starter-unbuilt', 'https://example.test/theme/resources/css/site.css', [], '0.2.1');
         try {
             foreach (['{broken', 'null', '{}', '{"entrypoints":false}', '{"entrypoints":{"sympress-starter-app":{"css":"wrong"},"sympress-starter-editor":{"css":[]}}}'] as $json) {
                 file_put_contents($directory . '/build/entrypoints.json', $json);

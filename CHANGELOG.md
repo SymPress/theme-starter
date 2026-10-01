@@ -1,11 +1,13 @@
 # Changelog
 
-## Unreleased
+## 0.1.2 — 2026-10-01
 
 - Use WordPress's native `theme.json` preset variables in frontend and editor
   styles. Replace the token generator with a Tailwind CSS alias map.
 - Use `sympress/qa` 0.1.1 for PHP syntax checking instead of a theme-local script.
 - Move asset and HTTP checks into `tests/`; expose HTTP checks as `npm run test:http`.
+- Remove internal review reports, design drafts and obsolete helper scripts;
+  streamline the README and keep browser screenshots in ignored test output.
 
 ## 0.1.1 — 2026-10-01
 

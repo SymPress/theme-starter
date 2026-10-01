@@ -67,7 +67,7 @@ final class Theme
         if (!isset($entries['sympress-starter-app'])) {
             // Keep the site readable before the first build. Admins see an action below.
             if (!is_admin()) {
-                wp_enqueue_style('sympress-starter-unbuilt', get_template_directory_uri() . '/resources/css/site.css', [], '0.1.1');
+                wp_enqueue_style('sympress-starter-unbuilt', get_template_directory_uri() . '/resources/css/site.css', [], '0.1.2');
             }
             return;
         }

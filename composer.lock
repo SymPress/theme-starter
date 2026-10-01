@@ -3348,6 +3348,12 @@
                 "url": "https://github.com/SymPress/twig-bundle.git",
                 "reference": "f7e449e128929d39b8767ae3a66da7d145fa4775"
             },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SymPress/twig-bundle/zipball/f7e449e128929d39b8767ae3a66da7d145fa4775",
+                "reference": "f7e449e128929d39b8767ae3a66da7d145fa4775",
+                "shasum": ""
+            },
             "require": {
                 "php": "^8.5",
                 "symfony/config": "^8.0",
@@ -3380,8 +3386,8 @@
             "type": "library",
             "extra": {
                 "kernel": {
-                    "bundle": "SymPress\\TwigBundle\\TwigBundle",
-                    "entry": "twig-bundle"
+                    "entry": "twig-bundle",
+                    "bundle": "SymPress\\TwigBundle\\TwigBundle"
                 }
             },
             "autoload": {
@@ -3389,37 +3395,7 @@
                     "SymPress\\TwigBundle\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "SymPress\\TwigBundle\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "cs": [
-                    "Composer\\Config::disableProcessTimeout",
-                    "qa cs"
-                ],
-                "cs:fix": [
-                    "Composer\\Config::disableProcessTimeout",
-                    "qa cs:fix"
-                ],
-                "static-analysis": [
-                    "Composer\\Config::disableProcessTimeout",
-                    "qa static-analysis"
-                ],
-                "tests": [
-                    "Composer\\Config::disableProcessTimeout",
-                    "qa tests"
-                ],
-                "test": [
-                    "@tests"
-                ],
-                "qa": [
-                    "@cs",
-                    "@static-analysis",
-                    "@tests"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-2.0-or-later"
             ],
@@ -3431,6 +3407,10 @@
                 }
             ],
             "description": "Twig integration bundle for SymPress with Symfony TwigBundle feature parity.",
+            "support": {
+                "issues": "https://github.com/SymPress/twig-bundle/issues",
+                "source": "https://github.com/SymPress/twig-bundle/tree/1.0.2"
+            },
             "time": "2026-10-01T13:31:49+00:00"
         },
         {
@@ -6916,12 +6896,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.5"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.9.0"
 }

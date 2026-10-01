@@ -5,6 +5,7 @@ declare(strict_types=1);
 use SymPress\Kernel\App;
 use SymPress\StarterTheme\View\TemplateResolver;
 use SymPress\StarterTheme\WordPress\Context;
+use SymPress\StarterTheme\WordPress\Content;
 use SymPress\StarterTheme\WordPress\Theme;
 use SymPress\TwigBundle\Renderer\TemplateRendererInterface;
 
@@ -27,6 +28,11 @@ $shortcodes = 0;
 $blocks = 0;
 $extraPosts = [];
 $terms = [];
+$temporaryPosts = [];
+$lengthFilter = static fn (): int => 3;
+$moreFilter = static fn (): string => ' [more]';
+$allowedBlocks = static fn (array $allowed): array => [...$allowed, 'review/count'];
+$excerptFilter = static fn (string $text): string => $text . ' [filtered]';
 try {
     add_shortcode('review_count', static function () use (&$shortcodes): string {
         ++$shortcodes;
@@ -49,8 +55,6 @@ try {
     $GLOBALS['post'] = get_post($postId);
     $resolver = new TemplateResolver($templates);
     $resolver->register();
-    get_page_template();
-    get_singular_template();
     $assert($resolver->candidates() === ['custom/landing', 'page-review-regression-fixture', 'page-' . $postId, 'page', 'singular'], 'Native page hierarchy: ' . json_encode($resolver->candidates()));
     $assert($resolver->resolve($resolver->candidates()) === '@StarterTheme/custom/landing.html.twig', 'Custom Twig page selected.');
     $assert(isset(wp_get_theme()->get_page_templates()['custom/landing.html.twig']), 'Custom Twig template appears in the editor.');
@@ -63,6 +67,28 @@ try {
     $assert($shortcodes === 1 && $blocks === 1, 'Body renders shortcode and dynamic block exactly once.');
     $assert(str_contains((string) $context['posts'][0]['content'], 'Dynamic block output'), 'Rendered block reaches Twig.');
 
+    add_filter('excerpt_length', $lengthFilter);
+    add_filter('excerpt_more', $moreFilter);
+    add_filter('excerpt_allowed_blocks', $allowedBlocks);
+    add_filter('get_the_excerpt', $excerptFilter, 20);
+    $excerptPost = wp_insert_post(['post_status' => 'publish', 'post_content' => 'One two three four five']);
+    $temporaryPosts[] = $excerptPost;
+    $assert(Content::excerpt(get_post($excerptPost)) === 'One two three [more] [filtered]', 'Cards respect native excerpt length, suffix and final filter.');
+    $reusable = wp_insert_post(['post_type' => 'wp_block', 'post_status' => 'publish', 'post_content' => '<!-- wp:paragraph --><p>Reusable excerpt content</p><!-- /wp:paragraph -->']);
+    $temporaryPosts[] = $reusable;
+    wp_update_post(['ID' => $excerptPost, 'post_content' => '<!-- wp:block {"ref":' . $reusable . '} /-->']);
+    $assert(str_contains(Content::excerpt(get_post($excerptPost)), 'Reusable excerpt content'), 'Reusable blocks contribute native excerpt text.');
+    wp_update_post(['ID' => $reusable, 'post_content' => '<!-- wp:block {"ref":' . $reusable . '} /--><!-- wp:paragraph --><p>Safe cyclic ending</p><!-- /wp:paragraph -->']);
+    $assert(str_contains(Content::excerpt(get_post($excerptPost)), 'Safe cyclic ending'), 'Cyclic reusable references terminate and preserve remaining text.');
+    wp_update_post(['ID' => $reusable, 'post_status' => 'private', 'post_content' => '<!-- wp:paragraph --><p>PRIVATE_PATTERN_SECRET</p><!-- /wp:paragraph -->']);
+    $assert(!str_contains(Content::excerpt(get_post($excerptPost)), 'PRIVATE_PATTERN_SECRET'), 'Private reusable content does not leak into card excerpts.');
+    wp_update_post(['ID' => $excerptPost, 'post_content' => '<!-- wp:review/count /-->']);
+    $assert(str_contains(Content::excerpt(get_post($excerptPost)), 'Dynamic block output'), 'Dynamic blocks allowed by WordPress contribute excerpt text.');
+    remove_filter('excerpt_length', $lengthFilter);
+    remove_filter('excerpt_more', $moreFilter);
+    remove_filter('excerpt_allowed_blocks', $allowedBlocks);
+    remove_filter('get_the_excerpt', $excerptFilter, 20);
+
     $cases = [
         [['cat' => 1], 'get_category_template', 'category-1'],
         [['author' => 1], 'get_author_template', 'author-1'],
@@ -71,10 +97,8 @@ try {
     ];
     foreach ($cases as [$query, $getter, $expected]) {
         $GLOBALS['wp_query'] = $GLOBALS['wp_the_query'] = new WP_Query($query);
-        $resolver = new TemplateResolver($templates);
-        $resolver->register();
-        $getter();
         $assert(in_array($expected, $resolver->candidates(), true), 'Core hierarchy captured: ' . $expected);
+        $assert(!in_array('custom/landing', $resolver->candidates(), true), 'The reused resolver does not retain the previous page hierarchy.');
     }
     register_post_type('review_book', ['public' => true, 'has_archive' => true]);
     register_taxonomy('review_genre', 'review_book', ['public' => true]);
@@ -87,27 +111,38 @@ try {
         $GLOBALS['wp_query'] = $GLOBALS['wp_the_query'] = new WP_Query([
             'tax_query' => [['taxonomy' => $taxonomy, 'field' => 'term_id', 'terms' => [$term['term_id']]]],
         ]);
-        $resolver = new TemplateResolver($templates);
-        $resolver->register();
-        $taxonomy === 'post_tag' ? get_tag_template() : get_taxonomy_template();
         $expected = $taxonomy === 'post_tag' ? 'tag-' . $term['term_id'] : 'taxonomy-review_genre';
         $assert(in_array($expected, $resolver->candidates(), true), 'Native term hierarchy: ' . $expected);
     }
     $GLOBALS['wp_query'] = $GLOBALS['wp_the_query'] = new WP_Query(['post_type' => 'review_book']);
-    $resolver = new TemplateResolver($templates);
-    $resolver->register();
-    get_archive_template();
     $assert($resolver->candidates() === ['archive-review_book', 'archive'], 'Custom post-type archive hierarchy.');
     $attachment = wp_insert_attachment(['post_title' => 'Review image', 'post_mime_type' => 'image/png']);
     $extraPosts[] = $attachment;
     $GLOBALS['post'] = get_post($attachment);
     $GLOBALS['wp_query'] = $GLOBALS['wp_the_query'] = new WP_Query(['attachment_id' => $attachment]);
-    $resolver = new TemplateResolver($templates);
-    $resolver->register();
-    get_attachment_template();
     $assert(in_array('image-png', $resolver->candidates(), true) && in_array('attachment', $resolver->candidates(), true), 'Attachment MIME hierarchy.');
+    $GLOBALS['wp_query'] = $GLOBALS['wp_the_query'] = new WP_Query(['cat' => 1]);
+    $before = $GLOBALS['wp_filter']['category_template_hierarchy']->callbacks[PHP_INT_MAX] ?? [];
+    $failHierarchy = static fn (): never => throw new RuntimeException('Expected hierarchy failure');
+    add_filter('category_template_hierarchy', $failHierarchy);
+    try {
+        $resolver->candidates();
+        throw new RuntimeException('The hierarchy exception must propagate.');
+    } catch (RuntimeException $error) {
+        $assert($error->getMessage() === 'Expected hierarchy failure', 'Exceptions propagate without returning stale candidates.');
+    } finally {
+        remove_filter('category_template_hierarchy', $failHierarchy);
+    }
+    $assert(($GLOBALS['wp_filter']['category_template_hierarchy']->callbacks[PHP_INT_MAX] ?? []) === $before, 'Temporary capture filters are removed after exceptions.');
     echo "PASS: {$checks} native WordPress review regression checks.\n";
 } finally {
+    remove_filter('excerpt_length', $lengthFilter);
+    remove_filter('excerpt_more', $moreFilter);
+    remove_filter('excerpt_allowed_blocks', $allowedBlocks);
+    remove_filter('get_the_excerpt', $excerptFilter, 20);
+    foreach ($temporaryPosts as $id) {
+        wp_delete_post($id, true);
+    }
     foreach ($extraPosts as $id) {
         wp_delete_attachment($id, true);
     }

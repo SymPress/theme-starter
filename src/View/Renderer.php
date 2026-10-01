@@ -16,10 +16,14 @@ final readonly class Renderer
     ) {
     }
 
-    public function render(): string
+    /**
+     * @param list<string>|null $candidates
+     * @param array<string, mixed>|null $context
+     */
+    public function render(?array $candidates = null, ?array $context = null): string
     {
-        $template = $this->resolver->resolve($this->resolver->candidates());
+        $template = $this->resolver->resolve($this->resolver->candidates($candidates));
 
-        return $this->templates->render($template, $this->context->build($template));
+        return $this->templates->render($template, $context ?? $this->context->build($template));
     }
 }

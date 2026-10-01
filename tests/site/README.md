@@ -46,6 +46,8 @@ podman exec sympress-theme-test-web php8.5 /usr/local/bin/wp-cli \
   --allow-root --path=public/wp eval-file runtime-check.php
 podman exec sympress-theme-test-web php8.5 /usr/local/bin/wp-cli \
   --allow-root --path=public/wp eval-file meta-description-check.php
+podman exec sympress-theme-test-web php8.5 /usr/local/bin/wp-cli \
+  --allow-root --path=public/wp eval-file review-regressions.php
 ```
 
 Build theme assets, then run `npm run test:browser` from the theme root. The router

@@ -28,8 +28,18 @@ final class ContentTest extends WordPressTestCase
         Functions\expect('do_blocks')->never();
         $post = new \WP_Post();
         $post->post_content = '<p>A &amp; B</p>';
-        self::assertSame('A & B', Content::excerpt($post, 30));
+        self::assertSame('A & B', Content::plainExcerpt($post, 30));
         $post->post_password = 'secret';
-        self::assertSame('', Content::excerpt($post, 30));
+        self::assertSame('', Content::plainExcerpt($post, 30));
+    }
+
+    public function testCardsUseWordPressExcerptFiltersAndProtectPrivateText(): void
+    {
+        $post = new \WP_Post();
+        Functions\expect('get_the_excerpt')->once()->with($post)->andReturn('<b>Filtered &amp; decoded</b>');
+        Functions\when('wp_strip_all_tags')->alias(strip_tags(...));
+        self::assertSame('Filtered & decoded', Content::excerpt($post));
+        $post->post_password = 'secret';
+        self::assertSame('', Content::excerpt($post));
     }
 }

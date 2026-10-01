@@ -9,6 +9,7 @@
     "node": "^22.18.0 || ^24.11.0 || >=26.0"
   },
   "scripts": {
+    "tokens": "node scripts/design-tokens.mjs",
     "dev": "encore dev",
     "watch": "encore dev --watch",
     "build": "encore production",

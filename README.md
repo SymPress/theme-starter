@@ -126,6 +126,11 @@ npm audit --audit-level=moderate
 composer audit --locked
 ```
 
+Composer's QA scripts use `@php`, so child tools inherit the PHP executable used
+to start Composer. In images whose default PHP is 8.4, use
+`php8.5 /usr/local/bin/composer qa`; there is no need to change the image's global
+`php` alternative. Calling `vendor/bin/qa` directly still uses its PATH shebang.
+
 The [integration fixture](tests/site/README.md) tests a separate WordPress database.
 `npm run test:browser` requires that fixture running, or `THEME_TEST_URL` pointing
 at an equivalent seeded **test** site. Never point the fixture setup at a live site.
@@ -146,11 +151,17 @@ at an equivalent seeded **test** site. Never point the fixture setup at a live s
 | Twig selection | `src/View/TemplateResolver.php` |
 | Optional editor pattern | `patterns/editorial-intro.php` |
 
-Edit palette/font values in `theme.json`; every Encore build regenerates the
-shared CSS tokens. Visible theme strings use the
+Edit palette/font values in `theme.json`; the compiler's `beforeCompile` hook
+regenerates shared CSS tokens and watches `theme.json`. Merely importing the
+Webpack configuration does not write files. `npm run tokens` generates them
+explicitly without compiling assets. Font variable names follow their preset
+slugs (`display` becomes `--font-display`). Visible theme strings use the
 `sympress-starter` text domain, with German source copy. WordPress dates, standard
 comment fields and admin text follow the site's locale. Run `composer i18n` to
-extract PHP and Twig messages into the POT automatically.
+extract PHP and Twig messages into the POT automatically. PHP extraction selects
+the `sympress-starter` text domain; Twig helpers bind that domain themselves.
+Printf placeholders receive `php-format` flags. Check the committed catalog with
+`php scripts/extract-translations.php --check`.
 
 The native WordPress PHP template hierarchy remains intact: plugin template
 overrides can continue to work. `index.php` delegates to Twig when WordPress reaches
@@ -159,6 +170,21 @@ filters: taxonomy/category/tag, author, date, post-type archives, attachments,
 page slugs/IDs and custom page templates follow core ordering. Add optional
 templates as needed; no `front-page.html.twig` is shipped,
 so a static homepage displays the page's editor content.
+
+Candidates are collected for the current query on each render, with temporary
+hooks removed afterwards, including on exceptions. REST/AJAX/CLI callers that
+already have view data can bypass the WordPress main loop explicitly:
+
+```php
+$renderer->render(['partials/post-summary'], ['post' => $postViewData]);
+```
+
+Card excerpts use native `get_the_excerpt`, `excerpt_length` and `excerpt_more`
+filters. Public reusable blocks are expanded through WordPress's excerpt block
+allowlist with cycle/depth protection. A custom dynamic block must be opted in
+via `excerpt_allowed_blocks`; its renderer must not recursively request excerpts.
+Singular pages do not compute unused card excerpts. Metadata continues to use
+stored plain text and never renders blocks or shortcodes.
 
 Use `sympress_starter/template_candidates` to add specific archive/page templates,
 or `sympress_starter/context` to add view data. Implement `ContextComposer` as a
@@ -187,11 +213,15 @@ autoload/container cache using your site's normal commands.
 
 ## Release
 
-Build in CI and deploy `build/` alongside PHP, templates, `style.css`, `theme.json`,
+Build in CI and deploy `build/` alongside PHP, `resources/views/`, `resources/css/`, `style.css`, `theme.json`,
 patterns and `screenshot.png`. Keep the site's Composer vendor dependencies in its
 normal deployment. Do not ship node_modules, tests, docs, caches or local secrets.
 Build output is ignored in source control and must be included in release artifacts.
 Missing or invalid asset manifests show an admin notice and a readable CSS fallback.
+The frontend entry is validated independently of the optional editor entry.
+Build assets may use relative subdirectories such as `js/` and `css/`; paths
+outside `build/` are rejected. A broken editor entry does not disable frontend
+assets. Script-only frontend entries are supported.
 
 Configure gzip/Brotli on the hosting webserver for HTML, CSS and JavaScript. Give
 content-hashed build assets `Cache-Control: public, max-age=31536000, immutable`;

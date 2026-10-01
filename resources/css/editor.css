@@ -15,7 +15,7 @@
 .editor-styles-wrapper h1,
 .editor-styles-wrapper h2,
 .editor-styles-wrapper h3 {
-  font-family: var(--font-heading);
+  font-family: var(--font-display);
   font-weight: 400;
   letter-spacing: -.035em;
   line-height: 1.15;

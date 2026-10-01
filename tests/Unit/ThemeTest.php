@@ -13,6 +13,41 @@ use SymPress\StarterTheme\WordPress\Theme;
 
 final class ThemeTest extends WordPressTestCase
 {
+    public function testNestedFrontendAssetsSurviveABrokenOptionalEditor(): void
+    {
+        $directory = dirname(__DIR__) . '/Fixtures/nested';
+        Functions\when('get_template_directory')->justReturn($directory);
+        Functions\when('get_template_directory_uri')->justReturn('https://example.test/theme');
+        Functions\expect('wp_enqueue_style')->never();
+        $entries = BuildManifest::read($directory . '/build/entrypoints.json');
+        self::assertArrayHasKey('sympress-starter-app', $entries);
+        self::assertArrayNotHasKey('sympress-starter-editor', $entries);
+        $manager = new AssetManager();
+        (new Theme())->assets($manager);
+        $assets = $manager->assets();
+        self::assertSame($directory . '/build/css/app.12345678.css', $assets[Style::class]['sympress-starter-app']->filePath());
+        self::assertSame($directory . '/build/js/app.12345678.js', $assets[Script::class]['sympress-starter-app']->filePath());
+        self::assertSame('https://example.test/theme/build/js/app.12345678.js', $assets[Script::class]['sympress-starter-app']->url());
+        self::assertSame('https://example.test/theme/build/css/app.12345678.css', $assets[Style::class]['sympress-starter-app']->url());
+    }
+
+    public function testManifestWithoutEditorAndScriptOnlyEntryAreValid(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'theme-manifest-');
+        $asset = tempnam(sys_get_temp_dir(), 'theme-asset-') . '.js';
+        file_put_contents($asset, '// test');
+        try {
+            file_put_contents($file, json_encode(['entrypoints' => ['sympress-starter-app' => ['js' => [basename($asset)]]]]));
+            self::assertArrayHasKey('sympress-starter-app', BuildManifest::read($file));
+            file_put_contents($file, json_encode(['entrypoints' => ['sympress-starter-app' => ['js' => ['../' . basename($asset)]]]]));
+            self::assertNull(BuildManifest::read($file));
+        } finally {
+            unlink($file);
+            unlink($asset);
+            unlink(substr($asset, 0, -3));
+        }
+    }
+
     public function testValidBuildRegistersOnlyFrontendAssets(): void
     {
         Functions\when('get_template_directory')->justReturn(dirname(__DIR__) . '/Fixtures');

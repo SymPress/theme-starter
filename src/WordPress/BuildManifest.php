@@ -22,31 +22,43 @@ final class BuildManifest
             return null;
         }
         $entries = is_array($manifest) ? ($manifest['entrypoints'] ?? null) : null;
-        if (!is_array($entries) || !isset($entries['sympress-starter-app']['css'], $entries['sympress-starter-editor']['css'])) {
+        if (!is_array($entries)) {
             return null;
         }
+        $valid = [];
         foreach ($entries as $name => $entry) {
             if (!is_string($name) || !is_array($entry)) {
-                return null;
+                continue;
             }
-            foreach ($entry as $type => $files) {
-                if (!in_array($type, ['css', 'js'], true) || !self::validFiles($files, dirname($file))) {
-                    return null;
+            $assets = [];
+            foreach (['css', 'js'] as $type) {
+                if (!isset($entry[$type])) {
+                    continue;
                 }
+                if (!self::validFiles($entry[$type], dirname($file))) {
+                    continue 2;
+                }
+                $assets[$type] = $entry[$type];
             }
+            if (array_filter($assets) === []) {
+                continue;
+            }
+
+            $valid[$name] = $assets;
         }
-        return $entries;
+        return $valid === [] ? null : $valid;
     }
 
     private static function validFiles(mixed $files, string $directory): bool
     {
-        if (!is_array($files) || !array_is_list($files) || $files === []) {
+        if (!is_array($files) || !array_is_list($files)) {
             return false;
         }
         foreach ($files as $asset) {
             if (
-                !is_string($asset) || !preg_match('~^(?:\./)?[a-zA-Z0-9_.-]+\.(?:css|js)$~', $asset)
-                || !is_readable($directory . '/' . basename($asset))
+                !is_string($asset) || !preg_match('~^(?:\./)?(?:[a-zA-Z0-9_-][a-zA-Z0-9_.-]*/)*[a-zA-Z0-9_-][a-zA-Z0-9_.-]*\.(?:css|js)$~', $asset)
+                || !is_readable($directory . '/' . $asset)
+                || !str_starts_with((string) realpath($directory . '/' . $asset), realpath($directory) . DIRECTORY_SEPARATOR)
             ) {
                 return false;
             }

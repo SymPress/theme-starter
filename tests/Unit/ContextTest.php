@@ -33,6 +33,7 @@ final class ContextTest extends WordPressTestCase
         Functions\when('wp_strip_all_tags')->alias(strip_tags(...));
         Functions\when('strip_shortcodes')->returnArg();
         Functions\when('wp_trim_words')->returnArg();
+        Functions\when('get_the_excerpt')->justReturn('Excerpt');
         foreach (['get_the_post_thumbnail', 'wp_link_pages', 'get_custom_logo', 'wp_nav_menu', 'get_the_posts_pagination', 'get_search_query'] as $name) {
             Functions\when($name)->justReturn('');
         }

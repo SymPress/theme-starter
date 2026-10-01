@@ -192,7 +192,10 @@ multiple calls. Explicit candidates avoid that second hierarchy lookup.
 
 Card excerpts use native `get_the_excerpt`, `excerpt_length` and `excerpt_more`
 filters. Public reusable blocks are expanded through WordPress's excerpt block
-allowlist with cycle/depth protection. A custom dynamic block must be opted in
+allowlist with cycle protection, a maximum nesting depth of 20 and a total budget
+of 100 reusable references per excerpt. Further references are omitted; an
+authored excerpt avoids truncation for unusually large reusable layouts.
+A custom dynamic block must be opted in
 via `excerpt_allowed_blocks`; its renderer must not recursively request excerpts.
 Singular pages do not compute unused card excerpts. Metadata continues to use
 stored plain text and never renders blocks or shortcodes.

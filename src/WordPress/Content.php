@@ -25,9 +25,10 @@ final class Content
             return '';
         }
         $seen = [];
+        $remaining = 100;
         $allowReusable = static fn (array $allowed): array => array_values(array_unique([...$allowed, 'core/block']));
-        $renderReusable = static function (?string $rendered, array $block) use (&$seen): ?string {
-            return self::reusableExcerpt($rendered, $block, $seen);
+        $renderReusable = static function (?string $rendered, array $block) use (&$seen, &$remaining): ?string {
+            return self::reusableExcerpt($rendered, $block, $seen, $remaining);
         };
         add_filter('excerpt_allowed_blocks', $allowReusable);
         add_filter('pre_render_block', $renderReusable, 10, 2);
@@ -46,15 +47,16 @@ final class Content
      * @param array{blockName?: ?string, attrs?: array<string, mixed>} $block
      * @param array<int, true> $seen
      */
-    private static function reusableExcerpt(?string $rendered, array $block, array &$seen): ?string
+    private static function reusableExcerpt(?string $rendered, array $block, array &$seen, int &$remaining): ?string
     {
         if ($rendered !== null || ($block['blockName'] ?? '') !== 'core/block') {
             return $rendered;
         }
         $reference = (int) ($block['attrs']['ref'] ?? 0);
-        if ($reference === 0 || isset($seen[$reference]) || count($seen) >= 20) {
+        if ($reference === 0 || isset($seen[$reference]) || count($seen) >= 20 || $remaining <= 0) {
             return '';
         }
+        --$remaining;
         $reusable = get_post($reference);
         if (
             !$reusable instanceof \WP_Post || $reusable->post_type !== 'wp_block'

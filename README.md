@@ -35,7 +35,7 @@ Allow `composer/installers` and configure the site's installation path:
 ```
 
 Runtime dependencies are stable Assets `^1.2`, Kernel `^1.1` and Twig Bundle
-`^1.1.1`. Production asset compilation uses `sympress/asset-compiler` in the site
+`^1.2.1`. Production asset compilation uses `sympress/asset-compiler` in the site
 project; see [deployment](docs/deployment.md). Source archives contain no built
 assets and are not standalone WordPress ZIP installations.
 
@@ -85,6 +85,9 @@ Use `loop.first` for featured layouts instead of materializing with `first` or
 `slice`. Posts expose `content`, `excerpt(30)`, `thumbnail(size, attributes)`,
 `categories` and `meta(key)`. Menus and pagination are objects, with markup owned
 by the theme. ACF metadata conversion is optional and lives in Twig Bundle.
+Twig Bundle 1.2 adds public author profiles, lazy `post.author`/`post.terms(taxonomy)`,
+model constructor DI and WordPress helpers for admin rendering. See
+[UPGRADE-1.1.md](UPGRADE-1.1.md) before upgrading an existing site.
 
 Use `sympress/twig/context` and `sympress/twig/template_candidates` for filters.
 Autoconfigured services implement `TemplateComposerInterface`, optionally with

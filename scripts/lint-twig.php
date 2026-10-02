@@ -17,7 +17,7 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname(__
         continue;
     }
     $name = '@theme/' . substr($file->getPathname(), strlen(dirname(__DIR__) . '/resources/views/'));
-    $twig->parse($twig->tokenize($loader->getSourceContext($name)));
+    $twig->compileSource($loader->getSourceContext($name));
     ++$count;
 }
-echo "Parsed {$count} Twig templates.\n";
+echo "Compiled {$count} Twig templates.\n";

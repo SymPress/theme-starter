@@ -78,6 +78,13 @@ try {
     $block = $renderer->renderBlock('singular', 'content', ['posts' => $posts, 'show_comments' => false]);
     $assert(str_contains($block, 'Twig loop first') && !str_contains($block, '<html'), 'renderBlock returns only the selected block.');
     $assert(PostScope::snapshot() === $snapshot, 'Block rendering restores loop state.');
+    $home = $renderer->renderBlock('home', 'content', ['posts' => $posts, 'title' => 'Fixture journal']);
+    $assert(substr_count($home, 'id="featured-title"') === 1 && substr_count($home, 'class="post-summary"') === 1, 'Repeated home collection renders one featured post and only subsequent cards.');
+    $assert(preg_match('/<div class="post-grid">\s*<article\b.*?<\/article>\s*<\/div>\s*<\/section>/s', $home) === 1, 'Grid wrappers surround the complete second-loop card markup.');
+    $assert(PostScope::snapshot() === $snapshot, 'Two-pass home rendering restores native loop globals.');
+    $one = new PostCollection(new WP_Query(['p' => $ids[0]]), $factory);
+    $home = $renderer->renderBlock('home', 'content', ['posts' => $one, 'title' => 'Fixture journal']);
+    $assert(substr_count($home, 'id="featured-title"') === 1 && !str_contains($home, 'class="post-grid"'), 'A single-post home omits the empty grid and its wrappers.');
     echo "PASS: {$checks} lazy-loop and block-rendering integration checks.\n";
 } finally {
     remove_action('loop_start', $started);

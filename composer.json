@@ -1,47 +1,91 @@
 {
-  "name": "sympress/theme-starter",
-  "description": "An editorial WordPress starter theme with SymPress Twig, Tailwind CSS and Webpack Encore.",
-  "type": "wordpress-theme",
-  "license": "GPL-2.0-or-later",
-  "require": {
-    "php": "^8.5",
-    "composer/installers": "^2.3",
-    "symfony/dependency-injection": "^8.1",
-    "sympress/assets": "^1.2",
-    "sympress/kernel": "^1.1",
-    "sympress/twig-bundle": "^1.2",
-    "twig/twig": "^3.22"
-  },
-  "require-dev": { "brain/monkey": "^2.6", "nikic/php-parser": "^5.9", "sympress/qa": "^0.1.1" },
-  "autoload": { "psr-4": { "SymPress\\StarterTheme\\": "src/" } },
-  "autoload-dev": { "psr-4": { "SymPress\\StarterTheme\\Tests\\": "tests/" } },
-  "extra": {
-    "branch-alias": { "dev-main": "1.1.x-dev" },
-    "installer-name": "sympress-starter",
-    "kernel": {
-      "bundle": "SymPress\\StarterTheme\\StarterThemeBundle",
-      "entry": "sympress-starter"
+    "name": "sympress/theme-starter",
+    "description": "An editorial WordPress starter theme with SymPress Twig, Tailwind CSS and Webpack Encore.",
+    "type": "wordpress-theme",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": "^8.5",
+        "composer/installers": "^2.3",
+        "symfony/dependency-injection": "^8.1",
+        "sympress/assets": "^1.2.1",
+        "sympress/kernel": "^1.1.1",
+        "sympress/twig-bundle": "^1.2.1",
+        "twig/twig": "^3.22"
     },
-    "sympress": {
-      "asset-compiler": {
-        "script": { "$mode": { "$default": "build", "production": "build:production" } },
-        "dependencies": "install",
-        "package-manager": "npm",
-        "src-paths": ["resources", "patterns", "theme.json", "webpack.config.js", "postcss.config.js", "package.json", "package-lock.json"]
-      }
-    }
-  },
-  "scripts": {
-    "test": ["@php vendor/bin/qa tests", "@php tests/run.php"],
-    "cs": "@php vendor/bin/qa cs",
-    "cs:fix": "@php vendor/bin/qa cs:fix",
-    "static-analysis": "@php vendor/bin/qa static-analysis",
-    "i18n": "@php scripts/extract-translations.php",
-    "lint:twig": "@php scripts/lint-twig.php",
-    "lint:php": "@php vendor/bin/qa lint:php --exclude=tests/site/public",
-    "qa": ["@composer validate --strict", "@lint:php", "@lint:twig", "@cs", "@static-analysis", "@test"]
-  },
-  "config": { "sort-packages": true, "allow-plugins": { "composer/installers": true, "dealerdirect/phpcodesniffer-composer-installer": true, "phpstan/extension-installer": true } },
-  "minimum-stability": "stable",
-  "prefer-stable": true
+    "require-dev": {
+        "brain/monkey": "^2.6",
+        "nikic/php-parser": "^5.9",
+        "sympress/qa": "^0.1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "SymPress\\StarterTheme\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SymPress\\StarterTheme\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.1.x-dev"
+        },
+        "installer-name": "sympress-starter",
+        "kernel": {
+            "bundle": "SymPress\\StarterTheme\\StarterThemeBundle",
+            "entry": "sympress-starter"
+        },
+        "sympress": {
+            "asset-compiler": {
+                "script": {
+                    "$mode": {
+                        "$default": "build",
+                        "production": "build:production"
+                    }
+                },
+                "dependencies": "install",
+                "package-manager": "npm",
+                "src-paths": [
+                    "resources",
+                    "patterns",
+                    "theme.json",
+                    "webpack.config.js",
+                    "postcss.config.js",
+                    "package.json",
+                    "package-lock.json"
+                ]
+            }
+        }
+    },
+    "scripts": {
+        "test": [
+            "@php vendor/bin/qa tests",
+            "@php tests/run.php"
+        ],
+        "cs": "@php vendor/bin/qa cs",
+        "cs:fix": "@php vendor/bin/qa cs:fix",
+        "static-analysis": "@php vendor/bin/qa static-analysis",
+        "i18n": "@php scripts/extract-translations.php",
+        "lint:twig": "@php scripts/lint-twig.php",
+        "lint:php": "@php vendor/bin/qa lint:php --exclude=tests/site/public",
+        "qa": [
+            "@composer validate --strict",
+            "@lint:php",
+            "@lint:twig",
+            "@cs",
+            "@static-analysis",
+            "@test"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/installers": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }

@@ -35,7 +35,7 @@ Allow `composer/installers` and configure the site's installation path:
 ```
 
 Runtime dependencies are stable Assets `^1.2`, Kernel `^1.1` and Twig Bundle
-`^1.2`. Production asset compilation uses `sympress/asset-compiler` in the site
+`^1.2.1`. Production asset compilation uses `sympress/asset-compiler` in the site
 project; see [deployment](docs/deployment.md). Source archives contain no built
 assets and are not standalone WordPress ZIP installations.
 

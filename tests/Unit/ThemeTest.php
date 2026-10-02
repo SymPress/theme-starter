@@ -6,6 +6,7 @@ namespace SymPress\StarterTheme\Tests\Unit;
 
 use Brain\Monkey\Functions;
 use SymPress\Assets\AssetManager;
+use SymPress\Assets\IO\RequestFiles;
 use SymPress\Assets\Loader\EncoreManifest;
 use SymPress\Assets\Script;
 use SymPress\Assets\Style;
@@ -40,6 +41,9 @@ final class ThemeTest extends WordPressTestCase
             file_put_contents($file, json_encode(['entrypoints' => ['sympress-starter-app' => ['js' => [basename($asset)]]]]));
             self::assertArrayHasKey('sympress-starter-app', EncoreManifest::read($file));
             file_put_contents($file, json_encode(['entrypoints' => ['sympress-starter-app' => ['js' => ['../' . basename($asset)]]]]));
+            // Reads within one request retain the original manifest snapshot.
+            self::assertArrayHasKey('sympress-starter-app', EncoreManifest::read($file));
+            RequestFiles::reset();
             self::assertNull(EncoreManifest::read($file));
         } finally {
             unlink($file);
@@ -72,6 +76,7 @@ final class ThemeTest extends WordPressTestCase
         try {
             foreach (['{broken', 'null', '{}', '{"entrypoints":false}', '{"entrypoints":{"sympress-starter-app":{"css":"wrong"},"sympress-starter-editor":{"css":[]}}}'] as $json) {
                 file_put_contents($directory . '/build/entrypoints.json', $json);
+                RequestFiles::reset();
                 self::assertNull(EncoreManifest::read($directory . '/build/entrypoints.json'));
                 (new Theme())->assets(new AssetManager());
             }

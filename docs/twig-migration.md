@@ -33,7 +33,7 @@ container remains required.
 
 ## Stable releases and verification
 
-Twig Bundle 1.2.0 and Assets 1.2.0 provide the shared APIs. The theme and disposable
+Twig Bundle 1.2.1 and Assets 1.2.1 provide the shared APIs. The theme and disposable
 fixture use these published versions; development sibling aliases are not part
 of the release configuration. See [UPGRADE-0.2.md](../UPGRADE-0.2.md) and
 [deployment](deployment.md) for migration and production cache handling.

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.2 — 2026-10-03
+
+- Protect main with required CI and PRs; enable secret scanning, push protection
+  and Dependabot security updates. Add weekly dependency checks.
+- Pin reusable checks to a released main commit and document GitHub no-reply
+  attribution for future commits without rewriting published history.
+
 ## 1.1.0 — 2026-10-01
 
 - Require Twig Bundle 1.2 with public author profiles, safe filters, admin rendering,

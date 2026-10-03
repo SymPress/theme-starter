@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")"
+mkdir -p var
+php -r 'umask(0077); if (!is_file("var/app-secret")) { file_put_contents("var/app-secret", bin2hex(random_bytes(32))); }'
 mysql -hdb -uroot -proot -e "CREATE DATABASE IF NOT EXISTS theme_test; GRANT ALL ON theme_test.* TO 'db'@'%';"
 composer install --no-interaction --prefer-dist
 mkdir -p public/wp-content/mu-plugins var

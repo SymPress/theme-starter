@@ -3,6 +3,11 @@
 declare(strict_types=1);
 
 // Disposable local test database only. No production settings or credentials.
+$secret = file_get_contents(__DIR__ . '/var/app-secret');
+if (!is_string($secret) || strlen($secret) < 32) {
+    throw new RuntimeException('Prepare the private disposable fixture key first.');
+}
+$_ENV['APP_SECRET'] = $secret;
 define('DB_NAME', 'theme_test');
 define('DB_USER', getenv('THEME_TEST_DB_USER') ?: 'theme_test');
 define('DB_PASSWORD', getenv('THEME_TEST_DB_PASSWORD') ?: 'local-theme-tests-only');

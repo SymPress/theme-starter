@@ -7,6 +7,7 @@ namespace SymPress\StarterTheme\WordPress;
 use SymPress\Assets\AssetManager;
 use SymPress\Assets\Loader\EncoreEntrypointsLoader;
 use SymPress\Assets\Loader\EncoreManifest;
+use SymPress\Assets\Script;
 use SymPress\Assets\Security\FilesystemPathPolicy;
 use SymPress\Assets\SmallStyleConfigurator;
 use SymPress\TwigBundle\WordPress\Excerpt;
@@ -73,6 +74,13 @@ final class Theme
 
             if (apply_filters('sympress_starter/inline_styles', true)) {
                 (new SmallStyleConfigurator(new FilesystemPathPolicy([dirname($file)])))->configure($asset);
+            }
+            if ($asset instanceof Script) {
+                $asset->isInHeader();
+                if ($asset->handle() === 'sympress-starter-app') {
+                    // Select the mobile layout before first paint; the bundle remains deferred.
+                    $asset->prependInlineScript("document.documentElement.classList.add('has-menu-js');");
+                }
             }
             $manager->register($asset);
         }

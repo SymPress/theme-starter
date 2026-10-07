@@ -31,6 +31,9 @@ final class ThemeTest extends WordPressTestCase
         self::assertSame($directory . '/build/js/app.12345678.js', $assets[Script::class]['sympress-starter-app']->filePath());
         self::assertSame('https://example.test/theme/build/js/app.12345678.js', $assets[Script::class]['sympress-starter-app']->url());
         self::assertSame('https://example.test/theme/build/css/app.12345678.css', $assets[Style::class]['sympress-starter-app']->url());
+        self::assertFalse($assets[Script::class]['sympress-starter-app']->inFooter());
+        self::assertSame('defer', $assets[Script::class]['sympress-starter-app']->loadingStrategy());
+        self::assertSame(["document.documentElement.classList.add('has-menu-js');"], $assets[Script::class]['sympress-starter-app']->inlineScripts()['before']);
     }
 
     public function testManifestWithoutEditorAndScriptOnlyEntryAreValid(): void

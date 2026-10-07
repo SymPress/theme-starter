@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Select the mobile navigation layout before first paint while keeping the
+  application deferred and preserving visible navigation without JavaScript.
 - Provide a document-title meta description when a page has no excerpt, tagline
   or archive description; preserve SEO ownership and explicit empty overrides.
 

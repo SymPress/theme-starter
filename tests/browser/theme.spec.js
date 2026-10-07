@@ -84,6 +84,57 @@ test('mobile keyboard menu, Escape and no-JavaScript fallback', async ({ page, b
   await context.close();
 });
 
+for (const width of [320, 390]) {
+  test(`mobile layout stays stable while JavaScript initialization waits at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 844 });
+    await page.addInitScript(() => {
+      window.layoutShifts = [];
+      window.layoutShiftObserver = new PerformanceObserver(list => {
+        for (const entry of list.getEntries()) {
+          if (!entry.hadRecentInput) window.layoutShifts.push(entry.value);
+        }
+      });
+      window.layoutShiftObserver.observe({ type: 'layout-shift', buffered: true });
+    });
+    let releaseScript;
+    const scriptReady = new Promise(resolve => { releaseScript = resolve; });
+    await page.route('**/*', async route => {
+      if (new URL(route.request().url()).pathname === '/__theme-delayed-ready.js') {
+        await scriptReady;
+        await route.fulfill({ contentType: 'text/javascript', body: '' });
+      } else if (route.request().isNavigationRequest()) {
+        const response = await route.fetch();
+        // A deferred dependency holds DOMContentLoaded beyond the first paint,
+        // including when Assets inlines the small application bundle.
+        const body = (await response.text()).replace('</head>', '<script defer src="/__theme-delayed-ready.js"></script></head>');
+        await route.fulfill({ response, body });
+      } else {
+        await route.continue();
+      }
+    });
+    try {
+      await page.goto('/', { waitUntil: 'commit' });
+      await page.waitForFunction(() => performance.getEntriesByType('paint').some(entry => entry.name === 'first-contentful-paint'));
+      await expect(page.locator('#primary-navigation')).toBeHidden();
+      const before = await page.locator('#content').boundingBox();
+      releaseScript();
+      await page.waitForLoadState('load');
+      // Allow layout and PerformanceObserver delivery to finish before reading CLS.
+      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      const after = await page.locator('#content').boundingBox();
+      expect(after.y).toBe(before.y);
+      expect(await page.evaluate(() => {
+        const pending = window.layoutShiftObserver.takeRecords().filter(entry => !entry.hadRecentInput).map(entry => entry.value);
+        return [...window.layoutShifts, ...pending].reduce((total, value) => total + value, 0);
+      })).toBe(0);
+      await page.getByRole('button', { name: 'Menü' }).click();
+      await expect(page.locator('#primary-navigation')).toBeVisible();
+    } finally {
+      releaseScript();
+    }
+  });
+}
+
 test('search submits, escapes input and handles no results', async ({ page }) => {
   await page.goto('/?s=');
   await page.getByRole('searchbox').fill('Notizbuch');

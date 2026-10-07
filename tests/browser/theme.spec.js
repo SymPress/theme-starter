@@ -88,6 +88,16 @@ for (const width of [320, 390]) {
   test(`mobile layout stays stable while JavaScript initialization waits at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 844 });
     await page.addInitScript(() => {
+      // Hold initialization callbacks when Assets inlines the application.
+      const initializationReady = new Promise(resolve => { window.releaseInitialization = resolve; });
+      const addListener = document.addEventListener.bind(document);
+      document.addEventListener = (type, listener, options) => {
+        if (type === 'DOMContentLoaded' && typeof listener === 'function') {
+          addListener(type, event => initializationReady.then(() => listener.call(document, event)), options);
+        } else {
+          addListener(type, listener, options);
+        }
+      };
       window.layoutShifts = [];
       window.layoutShiftObserver = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
@@ -96,21 +106,18 @@ for (const width of [320, 390]) {
       });
       window.layoutShiftObserver.observe({ type: 'layout-shift', buffered: true });
     });
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    page.on('requestfailed', request => {
+      if (/\.(css|js)(\?|$)/.test(request.url())) errors.push(`${request.url()}: ${request.failure().errorText}`);
+    });
     let releaseScript;
     const scriptReady = new Promise(resolve => { releaseScript = resolve; });
-    await page.route('**/*', async route => {
-      if (new URL(route.request().url()).pathname === '/__theme-delayed-ready.js') {
-        await scriptReady;
-        await route.fulfill({ contentType: 'text/javascript', body: '' });
-      } else if (route.request().isNavigationRequest()) {
-        const response = await route.fetch();
-        // A deferred dependency holds DOMContentLoaded beyond the first paint,
-        // including when Assets inlines the small application bundle.
-        const body = (await response.text()).replace('</head>', '<script defer src="/__theme-delayed-ready.js"></script></head>');
-        await route.fulfill({ response, body });
-      } else {
-        await route.continue();
-      }
+    // Hold external bundles too. Keep the document's normal response so HTTP
+    // fixtures retain their address space and browser network checks.
+    await page.route('**/sympress-starter-app*.js*', async route => {
+      await scriptReady;
+      await route.continue();
     });
     try {
       await page.goto('/', { waitUntil: 'commit' });
@@ -118,6 +125,7 @@ for (const width of [320, 390]) {
       await expect(page.locator('#primary-navigation')).toBeHidden();
       const before = await page.locator('#content').boundingBox();
       releaseScript();
+      await page.evaluate(() => window.releaseInitialization());
       await page.waitForLoadState('load');
       // Allow layout and PerformanceObserver delivery to finish before reading CLS.
       await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
@@ -129,6 +137,7 @@ for (const width of [320, 390]) {
       })).toBe(0);
       await page.getByRole('button', { name: 'Menü' }).click();
       await expect(page.locator('#primary-navigation')).toBeVisible();
+      expect(errors).toEqual([]);
     } finally {
       releaseScript();
     }

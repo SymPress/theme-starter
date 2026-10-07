@@ -17,7 +17,7 @@ msgstr ""
 msgid "Die Kommentare sind geschlossen."
 msgstr ""
 
-#: src/WordPress/Theme.php:134
+#: src/WordPress/Theme.php:143
 msgid "Die SymPress-Starter-Assets fehlen oder sind beschädigt. Bitte npm ci && npm run build im Theme-Verzeichnis ausführen."
 msgstr ""
 

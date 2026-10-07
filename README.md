@@ -71,6 +71,11 @@ Use complete Tailwind class names. Editor styles remain separate from frontend
 Preflight. Encore's runtime public path is `auto`; the relative manifest-path
 warning is intentional and lazy chunks resolve from their script URL.
 
+Frontend scripts remain deferred in the document head. A small inline script
+selects the collapsed mobile navigation before first paint, so initialization
+does not change the header height. With JavaScript disabled, navigation stays
+visible and the menu button stays hidden.
+
 ## Twig and WordPress
 
 `@theme` searches child views before parent views. The layout extends

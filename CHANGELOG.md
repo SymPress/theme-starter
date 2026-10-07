@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Provide a document-title meta description when a page has no excerpt, tagline
+  or archive description; preserve SEO ownership and explicit empty overrides.
+
 ## 1.1.2 — 2026-10-03
 
 - Protect main with required CI and PRs; enable secret scanning, push protection

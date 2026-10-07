@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SymPress\StarterTheme\Tests\Unit;
 
 use Brain\Monkey\Functions;
+use PHPUnit\Framework\Attributes\DataProvider;
 use SymPress\Assets\AssetManager;
 use SymPress\Assets\IO\RequestFiles;
 use SymPress\Assets\Loader\EncoreManifest;
@@ -104,6 +105,32 @@ final class ThemeTest extends WordPressTestCase
         $this->expectOutputString("<meta name=\"description\" content=\"A &amp; B\">\n");
         (new Theme())->metaDescription();
         $post->post_password = 'secret';
+        (new Theme())->metaDescription();
+    }
+
+    /** @return iterable<string, array{string, string}> */
+    public static function homeDescriptions(): iterable
+    {
+        yield 'empty tagline' => ['', 'Example &amp; Site'];
+        yield 'whitespace tagline' => [" \n\t", 'Example &amp; Site'];
+        yield 'markup-only tagline' => ['<p>&nbsp;</p>', 'Example &amp; Site'];
+        yield 'configured tagline' => ['Articles about WordPress.', 'Articles about WordPress.'];
+    }
+
+    #[DataProvider('homeDescriptions')]
+    public function testHomeDescriptionFallsBackToTheDocumentTitle(string $tagline, string $expected): void
+    {
+        foreach (['is_admin', 'is_feed', 'is_search', 'is_404', 'is_preview', 'is_singular'] as $function) {
+            Functions\when($function)->justReturn(false);
+        }
+        Functions\when('is_home')->justReturn(true);
+        Functions\when('get_option')->justReturn(false);
+        Functions\when('get_bloginfo')->justReturn($tagline);
+        Functions\when('wp_get_document_title')->justReturn('Example & Site');
+        Functions\when('wp_strip_all_tags')->alias(strip_tags(...));
+        Functions\when('wp_trim_words')->returnArg();
+        Functions\when('esc_attr')->alias(static fn (string $value): string => htmlspecialchars($value, ENT_QUOTES));
+        $this->expectOutputString('<meta name="description" content="' . $expected . '">' . "\n");
         (new Theme())->metaDescription();
     }
 }

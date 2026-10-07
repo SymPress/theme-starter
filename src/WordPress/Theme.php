@@ -113,8 +113,7 @@ final class Theme
             $description = get_the_archive_description();
         }
 
-        $description = self::descriptionText($description);
-        if ($description === '') {
+        if (self::descriptionText($description) === '') {
             $description = wp_get_document_title();
         }
         $description = self::descriptionText((string) apply_filters('sympress_starter/meta_description', $description));

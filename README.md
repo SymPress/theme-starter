@@ -138,7 +138,8 @@ Manifest paths and symlinks outside `build/` are rejected. Frontend and optional
 editor entries are validated independently.
 
 Disable small CSS inlining with `sympress_starter/inline_styles`. The plain-text
-meta-description fallback stands down for common SEO plugins. Use
+meta-description fallback uses the post excerpt, site tagline or term description,
+then the document title when those are empty. It stands down for common SEO plugins. Use
 `sympress_starter/meta_description_enabled` to disable it or
 `sympress_starter/meta_description` to customize its text. Protected content,
 previews, search and 404 pages are excluded.

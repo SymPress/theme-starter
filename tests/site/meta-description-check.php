@@ -38,6 +38,19 @@ try {
     remove_filter('pre_option_page_on_front', $pageId);
     remove_filter('pre_option_show_on_front', $frontMode);
 
+    $GLOBALS['wp_query'] = new WP_Query();
+    $postsMode = static fn () => 'posts';
+    add_filter('pre_option_show_on_front', $postsMode);
+    add_filter('pre_option_blogdescription', '__return_empty_string');
+    $GLOBALS['wp_query']->is_home = true;
+    $assert(str_contains($render(), esc_attr(wp_get_document_title())), 'An empty home tagline falls back to the document title.');
+    add_filter('sympress_starter/meta_description', '__return_empty_string');
+    $assert($render() === '', 'An explicit empty override also suppresses the title fallback.');
+    remove_filter('sympress_starter/meta_description', '__return_empty_string');
+    remove_filter('pre_option_show_on_front', $postsMode);
+    remove_filter('pre_option_blogdescription', '__return_empty_string');
+    $GLOBALS['wp_query'] = new WP_Query(['page_id' => $page->ID]);
+
     $override = static fn () => '<p>Eine "Beschreibung" &amp; mehr.</p><script>BAD_SCRIPT</script>';
     add_filter('sympress_starter/meta_description', $override);
     $html = $render();

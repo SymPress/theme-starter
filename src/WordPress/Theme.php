@@ -113,15 +113,24 @@ final class Theme
             $description = get_the_archive_description();
         }
 
-        $description = (string) apply_filters('sympress_starter/meta_description', $description);
-        $description = html_entity_decode(wp_strip_all_tags($description), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        $description = trim((string) preg_replace('/\s+/u', ' ', $description));
-        $description = wp_trim_words($description, 30, '…');
+        $description = self::descriptionText($description);
+        if ($description === '') {
+            $description = wp_get_document_title();
+        }
+        $description = self::descriptionText((string) apply_filters('sympress_starter/meta_description', $description));
         if ($description === '') {
             return;
         }
 
         echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
+    }
+
+    private static function descriptionText(string $description): string
+    {
+        $description = html_entity_decode(wp_strip_all_tags($description), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $description = trim((string) preg_replace('/\s+/u', ' ', $description));
+
+        return wp_trim_words($description, 30, '…');
     }
 
     public function buildNotice(): void

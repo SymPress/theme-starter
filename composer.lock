@@ -1911,16 +1911,16 @@
         },
         {
             "name": "symfony/polyfill-deepclone",
-            "version": "v1.43.0",
+            "version": "v1.43.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-deepclone.git",
-                "reference": "8db92c5508a3f7f82d8688d32f0a4868a26e58ad"
+                "reference": "aaba44b6ee7299ae65717811c55b57ab9bc0fedd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-deepclone/zipball/8db92c5508a3f7f82d8688d32f0a4868a26e58ad",
-                "reference": "8db92c5508a3f7f82d8688d32f0a4868a26e58ad",
+                "url": "https://api.github.com/repos/symfony/polyfill-deepclone/zipball/aaba44b6ee7299ae65717811c55b57ab9bc0fedd",
+                "reference": "aaba44b6ee7299ae65717811c55b57ab9bc0fedd",
                 "shasum": ""
             },
             "require": {
@@ -1974,7 +1974,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-deepclone/tree/v1.43.0"
+                "source": "https://github.com/symfony/polyfill-deepclone/tree/v1.43.1"
             },
             "funding": [
                 {
@@ -1994,7 +1994,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-30T09:07:27+00:00"
+            "time": "2026-10-06T19:46:18+00:00"
         },
         {
             "name": "symfony/polyfill-intl-grapheme",
@@ -3184,16 +3184,16 @@
         },
         {
             "name": "sympress/framework-bundle",
-            "version": "v1.0.2",
+            "version": "v1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SymPress/framework-bundle.git",
-                "reference": "0211ce189e6028b3462fe4925c7e004d8f78193e"
+                "reference": "420e185873c5356ec1a8e2c7a9fff7793755643b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SymPress/framework-bundle/zipball/0211ce189e6028b3462fe4925c7e004d8f78193e",
-                "reference": "0211ce189e6028b3462fe4925c7e004d8f78193e",
+                "url": "https://api.github.com/repos/SymPress/framework-bundle/zipball/420e185873c5356ec1a8e2c7a9fff7793755643b",
+                "reference": "420e185873c5356ec1a8e2c7a9fff7793755643b",
                 "shasum": ""
             },
             "require": {
@@ -3204,15 +3204,15 @@
                 "symfony/cache-contracts": "^3.6",
                 "symfony/config": "^8.1",
                 "symfony/console": "^8.1",
-                "symfony/dependency-injection": "^8.1",
+                "symfony/dependency-injection": "^8.1.8",
                 "symfony/error-handler": "^8.1",
                 "symfony/expression-language": "^8.0",
                 "symfony/filesystem": "^8.0",
                 "symfony/framework-bundle": "^8.1",
                 "symfony/http-kernel": "^8.1",
-                "symfony/routing": "^8.0",
+                "symfony/routing": "^8.1",
                 "symfony/service-contracts": "^3.6",
-                "symfony/yaml": "^8.0",
+                "symfony/yaml": "^8.1",
                 "sympress/kernel": "^1.1.1"
             },
             "require-dev": {
@@ -3263,29 +3263,29 @@
             "authors": [
                 {
                     "name": "Brian Schaffner",
-                    "email": "brian.schaeffner@sympress.de",
+                    "email": "brian.schaeffner@sympress.io",
                     "role": "Developer"
                 }
             ],
             "description": "SymPress FrameworkBundle bridge with Symfony Cache integration and WordPress object-cache support.",
             "support": {
                 "issues": "https://github.com/SymPress/framework-bundle/issues",
-                "source": "https://github.com/SymPress/framework-bundle/tree/v1.0.2"
+                "source": "https://github.com/SymPress/framework-bundle/tree/v1.0.6"
             },
-            "time": "2026-10-02T11:08:06+00:00"
+            "time": "2026-10-09T11:56:27+00:00"
         },
         {
             "name": "sympress/kernel",
-            "version": "v1.1.1",
+            "version": "v1.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SymPress/kernel.git",
-                "reference": "17b50f397b66d408a8f45aeadd7b41664f3d957e"
+                "reference": "b4c9ebca3d808e91683ad6cb5efaf256f24761c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SymPress/kernel/zipball/17b50f397b66d408a8f45aeadd7b41664f3d957e",
-                "reference": "17b50f397b66d408a8f45aeadd7b41664f3d957e",
+                "url": "https://api.github.com/repos/SymPress/kernel/zipball/b4c9ebca3d808e91683ad6cb5efaf256f24761c0",
+                "reference": "b4c9ebca3d808e91683ad6cb5efaf256f24761c0",
                 "shasum": ""
             },
             "require": {
@@ -3298,15 +3298,15 @@
                 "symfony/clock": "^8.0",
                 "symfony/config": "^8.0",
                 "symfony/console": "^8.0",
-                "symfony/dependency-injection": "^8.1",
+                "symfony/dependency-injection": "^8.1.8",
                 "symfony/event-dispatcher": "^8.0",
                 "symfony/expression-language": "^8.0",
                 "symfony/filesystem": "^8.0",
                 "symfony/http-foundation": "^8.1",
                 "symfony/http-kernel": "^8.1",
-                "symfony/routing": "^8.0",
+                "symfony/routing": "^8.1",
                 "symfony/service-contracts": "^3.6",
-                "symfony/yaml": "^8.0"
+                "symfony/yaml": "^8.1"
             },
             "require-dev": {
                 "sympress/qa": "^0.1.2"
@@ -3329,29 +3329,29 @@
             "authors": [
                 {
                     "name": "Brian Schäffner",
-                    "email": "brian.schaeffner@sympress.de",
+                    "email": "brian.schaeffner@sympress.io",
                     "role": "Developer"
                 }
             ],
             "description": "WordPress kernel and shared service container built on Symfony DependencyInjection.",
             "support": {
                 "issues": "https://github.com/SymPress/kernel/issues",
-                "source": "https://github.com/SymPress/kernel/tree/v1.1.1"
+                "source": "https://github.com/SymPress/kernel/tree/v1.1.8"
             },
-            "time": "2026-10-02T11:05:15+00:00"
+            "time": "2026-10-09T11:56:18+00:00"
         },
         {
             "name": "sympress/twig-bundle",
-            "version": "v1.2.1",
+            "version": "v1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SymPress/twig-bundle.git",
-                "reference": "fe7a04069561868a6c559716a1c85322748851f9"
+                "reference": "29838dc0663a825791690b5655152d681922e849"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SymPress/twig-bundle/zipball/fe7a04069561868a6c559716a1c85322748851f9",
-                "reference": "fe7a04069561868a6c559716a1c85322748851f9",
+                "url": "https://api.github.com/repos/SymPress/twig-bundle/zipball/29838dc0663a825791690b5655152d681922e849",
+                "reference": "29838dc0663a825791690b5655152d681922e849",
                 "shasum": ""
             },
             "require": {
@@ -3413,9 +3413,9 @@
             "description": "Twig integration bundle for SymPress with Symfony TwigBundle feature parity.",
             "support": {
                 "issues": "https://github.com/SymPress/twig-bundle/issues",
-                "source": "https://github.com/SymPress/twig-bundle/tree/v1.2.1"
+                "source": "https://github.com/SymPress/twig-bundle/tree/v1.2.2"
             },
-            "time": "2026-10-02T12:12:50+00:00"
+            "time": "2026-10-03T15:46:28+00:00"
         },
         {
             "name": "twig/twig",

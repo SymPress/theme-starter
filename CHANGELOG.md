@@ -1,7 +1,10 @@
 # Changelog
 
-## Unreleased
+## 1.1.4 — 2026-10-16
 
+- Require the security-patched SymPress Kernel and Twig Bundle and update the
+  Composer lock to Symfony 8.1.9 for ExpressionLanguage, YAML and HttpFoundation, including
+  CVE-2026-109449 and the request-parser regression fix.
 - Select the mobile navigation layout before first paint while keeping the
   application deferred and preserving visible navigation without JavaScript.
 - Provide a document-title meta description when a page has no excerpt, tagline

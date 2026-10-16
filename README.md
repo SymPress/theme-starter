@@ -11,16 +11,10 @@ PHP 8.5, Composer 2, WordPress 6.6+ and Node within the ranges in `package.json`
 The site's MU plugin must boot `SymPress\Kernel\Kernel\SiteKernel` before loading
 the theme. The site owns autoloading, the container and the Twig environment.
 
-From the site root, register the GitHub repository and install the stable package
-(the theme is distributed through GitHub tags, not currently listed on Packagist):
-
-The repository is currently private. Composer needs GitHub credentials with
-repository access, supplied through the site's Composer authentication (for
-example `COMPOSER_AUTH` in CI). No repository visibility change is required.
+From the site root, install the public package from Packagist:
 
 ```sh
-composer config repositories.sympress-theme vcs https://github.com/SymPress/theme-starter.git
-composer require sympress/theme-starter:^1.0
+composer require sympress/theme-starter:^1.1.4
 ```
 
 Allow `composer/installers` and configure the site's installation path:
@@ -34,8 +28,8 @@ Allow `composer/installers` and configure the site's installation path:
 }
 ```
 
-Runtime dependencies are stable Assets `^1.2`, Kernel `^1.1` and Twig Bundle
-`^1.2.1`. Production asset compilation uses `sympress/asset-compiler` in the site
+Runtime dependencies are stable Assets `^1.2.1`, Kernel `^1.1.10` and Twig Bundle
+`^1.2.3`. Production asset compilation uses `sympress/asset-compiler` in the site
 project; see [deployment](docs/deployment.md). Source archives contain no built
 assets and are not standalone WordPress ZIP installations.
 

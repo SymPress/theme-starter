@@ -7,7 +7,7 @@
         "php": "^8.5",
         "composer/installers": "^2.3",
         "symfony/dependency-injection": "^8.1",
-        "sympress/assets": "^1.2.1",
+        "sympress/assets": "^1.2.3",
         "sympress/kernel": "^1.1.10",
         "sympress/twig-bundle": "^1.2.3",
         "twig/twig": "^3.22"

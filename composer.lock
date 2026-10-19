@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bdfdb9e9d6d2c1c126af39911d7e45ae",
+    "content-hash": "557487d5a7b64fd1562f557e91976e02",
     "packages": [
         {
             "name": "composer/installers",
@@ -3107,16 +3107,16 @@
         },
         {
             "name": "sympress/assets",
-            "version": "v1.2.1",
+            "version": "v1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SymPress/assets.git",
-                "reference": "8c9fdc167c92ddb5472871c9e385cf723513594f"
+                "reference": "20822ad7300643b4890b69baecfe3c044105c834"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SymPress/assets/zipball/8c9fdc167c92ddb5472871c9e385cf723513594f",
-                "reference": "8c9fdc167c92ddb5472871c9e385cf723513594f",
+                "url": "https://api.github.com/repos/SymPress/assets/zipball/20822ad7300643b4890b69baecfe3c044105c834",
+                "reference": "20822ad7300643b4890b69baecfe3c044105c834",
                 "shasum": ""
             },
             "require": {
@@ -3166,7 +3166,7 @@
             "authors": [
                 {
                     "name": "Brian Schäffner",
-                    "email": "brian.schaeffner@sympress.de",
+                    "email": "brian.schaeffner@sympress.io",
                     "role": "Developer"
                 },
                 {
@@ -3178,9 +3178,9 @@
             "description": "WordPress asset management library with optional Symfony-kernel integration.",
             "support": {
                 "issues": "https://github.com/SymPress/assets/issues",
-                "source": "https://github.com/SymPress/assets/tree/v1.2.1"
+                "source": "https://github.com/SymPress/assets/tree/v1.2.3"
             },
-            "time": "2026-10-02T11:09:33+00:00"
+            "time": "2026-10-19T20:15:28+00:00"
         },
         {
             "name": "sympress/framework-bundle",

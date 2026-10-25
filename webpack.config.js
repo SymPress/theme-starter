@@ -24,9 +24,10 @@ Encore
     options.devMiddleware = { writeToDisk: true };
     options.hot = false;
     options.liveReload = true;
-    options.watchFiles = ['resources/views/**/*.twig', 'src/**/*.php', 'patterns/**/*.php', 'theme.json'];
+    options.watchFiles = ['*.php', 'resources/views/**/*.twig', 'src/**/*.php', 'patterns/**/*.php', 'theme.json'];
     // Sites outside localhost (e.g. *.ddev.site) must be listed; never "all", which disables DNS-rebinding checks.
-    options.allowedHosts = process.env.ENCORE_DEV_SERVER_ALLOWED_HOSTS?.split(',') ?? 'auto';
+    const allowedHosts = (process.env.ENCORE_DEV_SERVER_ALLOWED_HOSTS ?? '').split(',').map((host) => host.trim()).filter(Boolean);
+    options.allowedHosts = allowedHosts.length > 0 ? allowedHosts : 'auto';
     options.client = {
       overlay: false,
       webSocketURL: process.env.ENCORE_DEV_SERVER_WS_URL || `ws://localhost:${options.port}/ws`,

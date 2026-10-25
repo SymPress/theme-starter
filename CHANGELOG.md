@@ -1,10 +1,13 @@
 # Changelog
 
-## Unreleased
+## 1.2.0 — 2026-10-25
 
 - Add `npm run dev-server` for browser reloads on asset, Twig, PHP and
   `theme.json` changes. Builds stay on disk for the local manifest loader; other
   site hosts are opted in through `ENCORE_DEV_SERVER_ALLOWED_HOSTS`.
+- Expose the dev server websocket through the DDEV router on port 8080.
+- Update the npm lock to fast-uri 3.1.9 for GHSA-w74x-v6f9-j3xg,
+  GHSA-xhq7-xmqj-769h, GHSA-wjr9-j795-jxcr and GHSA-333x-w4r6-6crp.
 
 ## 1.1.4 — 2026-10-16
 

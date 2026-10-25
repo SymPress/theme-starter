@@ -53,13 +53,16 @@ npm run build     # production assets
 files; the dev server only pushes full-page reloads over a websocket on port 8080
 (`-- --port 8081` changes it). Pages on `localhost` connect directly. Other site
 hosts must be allowed explicitly, and the websocket URL must be reachable from the
-browser, for example in DDEV with an exposed port:
+browser. The DDEV project exposes the dev server through its router at port 8080:
 
 ```sh
-ENCORE_DEV_SERVER_ALLOWED_HOSTS=example.ddev.site \
-ENCORE_DEV_SERVER_WS_URL=wss://example.ddev.site:8080/ws \
-npm run dev-server -- --host 0.0.0.0
+ddev exec "ENCORE_DEV_SERVER_ALLOWED_HOSTS=sympress-theme.ddev.site \
+  ENCORE_DEV_SERVER_WS_URL=wss://sympress-theme.ddev.site:8080/ws \
+  npm run dev-server -- --host 0.0.0.0"
 ```
+
+Sites in their own DDEV project add the same `web_extra_exposed_ports` entry as
+`.ddev/config.yaml` and use their own host name.
 
 Do not set the allowed hosts to `all`; that disables the dev server's DNS-rebinding
 protection. Run `npm run build` before deploying, since dev builds contain the

@@ -45,8 +45,25 @@ WordPress. The package's `extra.kernel` metadata discovers its theme bundle;
 npm ci
 npm run dev       # development build
 npm run watch     # watch changes
+npm run dev-server # watch and reload the browser on asset, Twig, PHP and theme.json changes
 npm run build     # production assets
 ```
+
+`dev-server` writes builds to `build/` like `dev`, so the theme keeps loading local
+files; the dev server only pushes full-page reloads over a websocket on port 8080
+(`-- --port 8081` changes it). Pages on `localhost` connect directly. Other site
+hosts must be allowed explicitly, and the websocket URL must be reachable from the
+browser, for example in DDEV with an exposed port:
+
+```sh
+ENCORE_DEV_SERVER_ALLOWED_HOSTS=example.ddev.site \
+ENCORE_DEV_SERVER_WS_URL=wss://example.ddev.site:8080/ws \
+npm run dev-server -- --host 0.0.0.0
+```
+
+Do not set the allowed hosts to `all`; that disables the dev server's DNS-rebinding
+protection. Run `npm run build` before deploying, since dev builds contain the
+reload client.
 
 | Concern | Source |
 | --- | --- |

@@ -14,7 +14,7 @@ the theme. The site owns autoloading, the container and the Twig environment.
 From the site root, install the public package from Packagist:
 
 ```sh
-composer require sympress/theme-starter:^1.1.4
+composer require sympress/theme-starter:^1.2.0
 ```
 
 Allow `composer/installers` and configure the site's installation path:

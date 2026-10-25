@@ -12,3 +12,9 @@ web_environment:
   - THEME_TEST_DB_PASSWORD=db
   - THEME_TEST_DB_HOST=db
   - THEME_TEST_URL=http://sympress-theme.ddev.site
+# `npm run dev-server` reload websocket, reachable at wss://sympress-theme.ddev.site:8080/ws.
+web_extra_exposed_ports:
+  - name: encore
+    container_port: 8080
+    http_port: 8079
+    https_port: 8080

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Add `npm run dev-server` for browser reloads on asset, Twig, PHP and
+  `theme.json` changes. Builds stay on disk for the local manifest loader; other
+  site hosts are opted in through `ENCORE_DEV_SERVER_ALLOWED_HOSTS`.
+
 ## 1.1.4 — 2026-10-16
 
 - Require the security-patched SymPress Kernel and Twig Bundle and update the

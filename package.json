@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "encore dev",
     "watch": "encore dev --watch",
+    "dev-server": "encore dev-server --keep-public-path",
     "build": "encore production",
     "build:production": "npm run build",
     "test:browser": "playwright test",
@@ -27,6 +28,7 @@
     "postcss-loader": "^8.2.1",
     "tailwindcss": "4.3.3",
     "webpack": "^5.111.1",
-    "webpack-cli": "^7.2.3"
+    "webpack-cli": "^7.2.3",
+    "webpack-dev-server": "6.0.0"
   }
 }

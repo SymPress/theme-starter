@@ -9,7 +9,11 @@
     "sympress/theme-starter": "@dev"
   },
   "repositories": [
-    { "type": "path", "url": "../..", "options": { "symlink": true } }
+    {
+      "type": "path",
+      "url": "../..",
+      "options": { "symlink": true, "versions": { "sympress/theme-starter": "dev-main" }, "reference": "config" }
+    }
   ],
   "extra": {
     "sympress.asset-compiler": { "auto-discover": false, "packages": { "sympress/theme-starter": true } },

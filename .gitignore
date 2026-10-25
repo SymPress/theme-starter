@@ -19,7 +19,6 @@
 /tests/site/vendor/
 /tests/site/public/
 /tests/site/var/
-/tests/site/composer.lock
 /tests/site/.env
 /composer.local.json
 /composer.local.lock

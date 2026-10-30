@@ -2,6 +2,11 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 mkdir -p var
+curl --fail --silent --show-error --location \
+  https://github.com/wp-cli/wp-cli/releases/download/v2.12.0/wp-cli-2.12.0.phar \
+  --output var/wp-cli.phar
+printf '%s  %s\n' ce34ddd838f7351d6759068d09793f26755463b4a4610a5a5c0a97b68220d85c var/wp-cli.phar | sha256sum --check
+wp() { php var/wp-cli.phar "$@"; }
 php -r 'umask(0077); if (!is_file("var/app-secret")) { file_put_contents("var/app-secret", bin2hex(random_bytes(32))); }'
 mysql -hdb -uroot -proot -e "CREATE DATABASE IF NOT EXISTS theme_test; GRANT ALL ON theme_test.* TO 'db'@'%';"
 composer install --no-interaction --prefer-dist

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.1 — 2026-10-30
+
+- Update the JavaScript build and browser-test dependencies.
+- Patch PHPUnit and the WordPress browser fixture security updates.
+- Provision checksum-pinned WP-CLI for reproducible DDEV browser tests.
+- Refresh immutable workflow and action dependencies.
+
 ## 1.2.0 — 2026-10-25
 
 - Add `npm run dev-server` for browser reloads on asset, Twig, PHP and

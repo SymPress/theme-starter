@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.2 — 2026-11-06
+
+- Use the Symfony 8.1.11 security patches released on November 4.
+
 ## 1.2.1 — 2026-10-30
 
 - Update the JavaScript build and browser-test dependencies.

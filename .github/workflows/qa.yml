@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   wordpress:
-    uses: sympress/workflows/.github/workflows/ddev-playwright.yml@9ab936c5ff11667908252eb1b788fffe00ef5ed8
+    uses: sympress/workflows/.github/workflows/ddev-playwright.yml@2ebe47e2bc6d402c172015b64c0f5a9f2bf0c322 # v1.3.2
     with:
       php_version: '8.5'
       node_version: '24'
@@ -25,7 +25,7 @@ jobs:
       playwright_run_command: ddev exec bash tests/site/run-ci.sh && THEME_TEST_URL=http://sympress-theme.ddev.site npm run test:browser
 
   workflows:
-    uses: sympress/workflows/.github/workflows/lint-workflows.yml@9ab936c5ff11667908252eb1b788fffe00ef5ed8
+    uses: sympress/workflows/.github/workflows/lint-workflows.yml@2ebe47e2bc6d402c172015b64c0f5a9f2bf0c322 # v1.3.2
 
   php:
     name: PHP QA and translations

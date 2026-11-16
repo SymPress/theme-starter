@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.3.2 — 2026-11-16
+
+- Require SymPress Assets `^1.2.5`, Kernel `^1.1.16` and Twig Bundle `^1.3.1`, so
+  sites cannot resolve releases without the November Symfony security patches.
+- Exit the `scripts/` CLI tools when they are not run from the command line, and
+  exclude `scripts/`, `.ddev/` and `playwright.config.js` from dist archives.
+- Point the `dev-main` branch alias at `1.3.x-dev`.
+
+## 1.3.1 — 2026-11-13
+
+- Update Symfony Dependency Injection to 8.1.11.
+
+## 1.3.0 — 2026-11-13
+
+- Refresh the theme asset toolchain.
+
 ## 1.2.2 — 2026-11-06
 
 - Use the Symfony 8.1.11 security patches released on November 4.

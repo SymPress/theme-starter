@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ebcc70c8eb537d2dc4cd61bc8350bb35",
+    "content-hash": "b3e0d16abd7271fb28ac6a002190549c",
     "packages": [
         {
             "name": "composer/installers",
@@ -3107,23 +3107,23 @@
         },
         {
             "name": "sympress/assets",
-            "version": "v1.2.3",
+            "version": "v1.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SymPress/assets.git",
-                "reference": "20822ad7300643b4890b69baecfe3c044105c834"
+                "reference": "a62ed2dbf413257d4280e203ca16b5eacc83ebe9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SymPress/assets/zipball/20822ad7300643b4890b69baecfe3c044105c834",
-                "reference": "20822ad7300643b4890b69baecfe3c044105c834",
+                "url": "https://api.github.com/repos/SymPress/assets/zipball/a62ed2dbf413257d4280e203ca16b5eacc83ebe9",
+                "reference": "a62ed2dbf413257d4280e203ca16b5eacc83ebe9",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-json": "*",
                 "php": "^8.5",
-                "symfony/filesystem": "^8.0",
+                "symfony/filesystem": "^8.1.11",
                 "symfony/finder": "^8.0"
             },
             "require-dev": {
@@ -3178,9 +3178,10 @@
             "description": "WordPress asset management library with optional Symfony-kernel integration.",
             "support": {
                 "issues": "https://github.com/SymPress/assets/issues",
-                "source": "https://github.com/SymPress/assets/tree/v1.2.3"
+                "source": "https://github.com/SymPress/assets/tree/v1.2.5"
             },
-            "time": "2026-10-19T20:15:28+00:00"
+            "time": "2026-11-16T11:43:35+00:00",
+            "published-time": "2026-11-16T11:43:46+00:00"
         },
         {
             "name": "sympress/framework-bundle",
@@ -3277,16 +3278,16 @@
         },
         {
             "name": "sympress/kernel",
-            "version": "v1.1.13",
+            "version": "v1.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SymPress/kernel.git",
-                "reference": "6e8bd686a2f26a5e10e4fb9b34f3a621453b17c6"
+                "reference": "a3d063ecf2a188c9d9042d85a801cc3496d08455"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SymPress/kernel/zipball/6e8bd686a2f26a5e10e4fb9b34f3a621453b17c6",
-                "reference": "6e8bd686a2f26a5e10e4fb9b34f3a621453b17c6",
+                "url": "https://api.github.com/repos/SymPress/kernel/zipball/a3d063ecf2a188c9d9042d85a801cc3496d08455",
+                "reference": "a3d063ecf2a188c9d9042d85a801cc3496d08455",
                 "shasum": ""
             },
             "require": {
@@ -3297,17 +3298,17 @@
                 "psr/event-dispatcher": "^1.0",
                 "psr/log": "^3.0",
                 "symfony/clock": "^8.0",
-                "symfony/config": "^8.0",
+                "symfony/config": "^8.1.11",
                 "symfony/console": "^8.0",
                 "symfony/dependency-injection": "^8.1.8",
                 "symfony/event-dispatcher": "^8.0",
                 "symfony/expression-language": "^8.1.9",
-                "symfony/filesystem": "^8.0",
-                "symfony/http-foundation": "^8.1.9",
-                "symfony/http-kernel": "^8.1",
-                "symfony/routing": "^8.1",
+                "symfony/filesystem": "^8.1.11",
+                "symfony/http-foundation": "^8.1.11",
+                "symfony/http-kernel": "^8.1.11",
+                "symfony/routing": "^8.1.11",
                 "symfony/service-contracts": "^3.6",
-                "symfony/yaml": "^8.1.6"
+                "symfony/yaml": "^8.1.11"
             },
             "require-dev": {
                 "composer/semver": "^3.4",
@@ -3338,31 +3339,32 @@
             "description": "WordPress kernel and shared service container built on Symfony DependencyInjection.",
             "support": {
                 "issues": "https://github.com/SymPress/kernel/issues",
-                "source": "https://github.com/SymPress/kernel/tree/v1.1.13"
+                "source": "https://github.com/SymPress/kernel/tree/v1.1.16"
             },
-            "time": "2026-10-23T23:29:13+00:00"
+            "time": "2026-11-16T12:14:01+00:00",
+            "published-time": "2026-11-16T12:14:12+00:00"
         },
         {
             "name": "sympress/twig-bundle",
-            "version": "v1.3.0",
+            "version": "v1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SymPress/twig-bundle.git",
-                "reference": "ce0c1a6eaadddc9c36d2e8a4ea44fb47fb8dacf6"
+                "reference": "a15a958d83a4ec6d331fc40a0b18c2c7cc97d890"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SymPress/twig-bundle/zipball/ce0c1a6eaadddc9c36d2e8a4ea44fb47fb8dacf6",
-                "reference": "ce0c1a6eaadddc9c36d2e8a4ea44fb47fb8dacf6",
+                "url": "https://api.github.com/repos/SymPress/twig-bundle/zipball/a15a958d83a4ec6d331fc40a0b18c2c7cc97d890",
+                "reference": "a15a958d83a4ec6d331fc40a0b18c2c7cc97d890",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "php": "^8.5",
-                "symfony/config": "^8.0",
+                "symfony/config": "^8.1.11",
                 "symfony/dependency-injection": "^8.0",
-                "symfony/http-foundation": "^8.1.9",
-                "symfony/http-kernel": "^8.1",
+                "symfony/http-foundation": "^8.1.11",
+                "symfony/http-kernel": "^8.1.11",
                 "symfony/twig-bridge": "^8.1",
                 "symfony/twig-bundle": "^8.1",
                 "sympress/framework-bundle": "^1.0.7",
@@ -3416,9 +3418,10 @@
             "description": "Twig integration bundle for SymPress with Symfony TwigBundle feature parity.",
             "support": {
                 "issues": "https://github.com/SymPress/twig-bundle/issues",
-                "source": "https://github.com/SymPress/twig-bundle/tree/v1.3.0"
+                "source": "https://github.com/SymPress/twig-bundle/tree/v1.3.1"
             },
-            "time": "2026-10-25T20:46:58+00:00"
+            "time": "2026-11-06T08:46:55+00:00",
+            "published-time": "2026-11-06T08:47:10+00:00"
         },
         {
             "name": "twig/twig",
@@ -6912,5 +6915,5 @@
         "php": "^8.5"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }

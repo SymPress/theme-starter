@@ -5,6 +5,18 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+  # The test site pulls the theme's SymPress packages in transitively; watch them too
+  # so the WordPress and browser gates run against versions users can install.
+  - package-ecosystem: composer
+    directory: /tests/site
+    schedule:
+      interval: weekly
+    allow:
+      - dependency-type: all
+    groups:
+      test-site:
+        patterns: ["*"]
+    open-pull-requests-limit: 1
   - package-ecosystem: npm
     directory: /
     schedule:

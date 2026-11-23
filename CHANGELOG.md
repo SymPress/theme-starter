@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.3 — 2026-11-23
+
+- Update the asset toolchain: Tailwind CSS and `@tailwindcss/postcss` 4.3.5,
+  PostCSS 8.5.33, Webpack Encore 7.2.1 and Playwright 1.65.1.
+- Refresh the test-site lock to the theme's current dependency floors and let
+  Dependabot watch it.
+
 ## 1.3.2 — 2026-11-16
 
 - Require SymPress Assets `^1.2.5`, Kernel `^1.1.16` and Twig Bundle `^1.3.1`, so

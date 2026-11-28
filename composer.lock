@@ -2165,16 +2165,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.43.0",
+            "version": "v1.43.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "4d5d331bf731e0aedbc6b2f5e61135b7b7996a72"
+                "reference": "122889ed24dc000165bcbfd77ec412f15cbdfc6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/4d5d331bf731e0aedbc6b2f5e61135b7b7996a72",
-                "reference": "4d5d331bf731e0aedbc6b2f5e61135b7b7996a72",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/122889ed24dc000165bcbfd77ec412f15cbdfc6a",
+                "reference": "122889ed24dc000165bcbfd77ec412f15cbdfc6a",
                 "shasum": ""
             },
             "require": {
@@ -2226,7 +2226,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.43.0"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.43.3"
             },
             "funding": [
                 {
@@ -2246,7 +2246,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-24T15:19:04+00:00"
+            "time": "2026-10-28T09:35:49+00:00"
         },
         {
             "name": "symfony/polyfill-php85",
@@ -3180,8 +3180,7 @@
                 "issues": "https://github.com/SymPress/assets/issues",
                 "source": "https://github.com/SymPress/assets/tree/v1.2.5"
             },
-            "time": "2026-11-16T11:43:35+00:00",
-            "published-time": "2026-11-16T11:43:46+00:00"
+            "time": "2026-11-16T11:43:35+00:00"
         },
         {
             "name": "sympress/framework-bundle",
@@ -3341,8 +3340,7 @@
                 "issues": "https://github.com/SymPress/kernel/issues",
                 "source": "https://github.com/SymPress/kernel/tree/v1.1.16"
             },
-            "time": "2026-11-16T12:14:01+00:00",
-            "published-time": "2026-11-16T12:14:12+00:00"
+            "time": "2026-11-16T12:14:01+00:00"
         },
         {
             "name": "sympress/twig-bundle",
@@ -3420,21 +3418,20 @@
                 "issues": "https://github.com/SymPress/twig-bundle/issues",
                 "source": "https://github.com/SymPress/twig-bundle/tree/v1.3.1"
             },
-            "time": "2026-11-06T08:46:55+00:00",
-            "published-time": "2026-11-06T08:47:10+00:00"
+            "time": "2026-11-06T08:46:55+00:00"
         },
         {
             "name": "twig/twig",
-            "version": "v3.30.0",
+            "version": "v3.31.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "8c737079b726af72ff8ef3c595be9f6a810ea1ef"
+                "reference": "6f6ec372231b53d1d564567a78beb8844cafa132"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/8c737079b726af72ff8ef3c595be9f6a810ea1ef",
-                "reference": "8c737079b726af72ff8ef3c595be9f6a810ea1ef",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/6f6ec372231b53d1d564567a78beb8844cafa132",
+                "reference": "6f6ec372231b53d1d564567a78beb8844cafa132",
                 "shasum": ""
             },
             "require": {
@@ -3489,7 +3486,7 @@
             ],
             "support": {
                 "issues": "https://github.com/twigphp/Twig/issues",
-                "source": "https://github.com/twigphp/Twig/tree/v3.30.0"
+                "source": "https://github.com/twigphp/Twig/tree/v3.31.1"
             },
             "funding": [
                 {
@@ -3501,7 +3498,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-25T13:20:01+00:00"
+            "time": "2026-11-24T12:48:40+00:00"
         }
     ],
     "packages-dev": [
@@ -6915,5 +6912,5 @@
         "php": "^8.5"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.11.0"
+    "plugin-api-version": "2.9.0"
 }

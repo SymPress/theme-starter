@@ -25,7 +25,7 @@ jobs:
       playwright_run_command: ddev exec bash tests/site/run-ci.sh && THEME_TEST_URL=http://sympress-theme.ddev.site npm run test:browser
 
   workflows:
-    uses: sympress/workflows/.github/workflows/lint-workflows.yml@2ebe47e2bc6d402c172015b64c0f5a9f2bf0c322 # v1.3.2
+    uses: sympress/workflows/.github/workflows/lint-workflows.yml@4d668133403d357d8335fdbfb850bb13a9105ece # v2.0.0
 
   php:
     name: PHP QA and translations
